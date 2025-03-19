@@ -1,22 +1,25 @@
 module.exports = {
+	root: true,
 	parser: "@typescript-eslint/parser",
 	parserOptions: {
 		project: "tsconfig.json",
-		tsconfigRootDir: __dirname,
 		sourceType: "module",
 	},
-	plugins: ["@typescript-eslint/eslint-plugin"],
-	extends: ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
-	root: true,
-	env: {
-		node: true,
-		jest: true,
-	},
-	ignorePatterns: [".eslintrc.js"],
+	plugins: ["@typescript-eslint", "filename", "prettier"],
+	extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
 	rules: {
-		"@typescript-eslint/interface-name-prefix": "off",
-		"@typescript-eslint/explicit-function-return-type": "off",
-		"@typescript-eslint/explicit-module-boundary-types": "off",
-		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-explicit-any": "warn",
+		"@typescript-eslint/consistent-type-imports": "off",
+		"filename/filename-match": [
+			"error",
+			{
+				patterns: [
+					"^[a-z0-9-.]+(.d|.spec|.test|.e2e-spec|.e2e-test)?$",
+					"^[a-z0-9-]+(.entity|.dto|.module|.service|.controller|.guard|.strategy|.decorator|.filter|.pipe|.exception|.constants|.interface|.model|.config|.provider|.schema|.util|.helper|.middleware|.validator|.mock|.factory)?$",
+				],
+				case: "kebabCase",
+			},
+		],
 	},
+	ignorePatterns: [".eslintrc.js", "dist/**/*", "test/**/*"],
 };
