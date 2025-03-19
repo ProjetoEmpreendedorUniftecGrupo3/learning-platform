@@ -1,0 +1,16 @@
+{
+	"collection": "@nestjs/schematics",
+	"sourceRoot": "src",
+	"compilerOptions": {
+		"plugins": ["@nestjs/swagger"],
+		"tsConfigPath": "tsconfig.json",
+		"webpack": false,
+		"builder": {
+			"type": "tsc",
+			"options": {
+				"executor": "ts-node:dev",
+				"tsConfig": "tsconfig.json"
+			}
+		}
+	}
+}
