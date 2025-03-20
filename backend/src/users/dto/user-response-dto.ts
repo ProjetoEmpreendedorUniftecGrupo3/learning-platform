@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { User } from "../entities/user.entity";
+import { User, UserRole } from "../entities/user.entity";
 
 export class UserResponseDto {
 	@Expose()
@@ -13,6 +13,9 @@ export class UserResponseDto {
 
 	@Expose()
 	birthDate: Date;
+
+	@Expose()
+	role: UserRole;
 
 	constructor(partial: Partial<User>) {
 		Object.assign(this, partial);
