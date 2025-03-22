@@ -1,0 +1,49 @@
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+import { AuthProvider } from "./contexts/AuthContext";
+import { PublicLayout } from "layouts/PublicLayout";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+
+import UserLayout from "layouts/UserLayout";
+import { UserDashboardPage } from "pages/auth/Dashboard";
+import { AdminLayout } from "layouts/AdminLayout";
+import { AdminDashboardPage } from "pages/admin/Dashboard";
+import LoginPage from "pages/public/Login";
+import { ProtectedRoute } from "common/ProtectedRoute";
+import { PublicOnlyRoute } from "common/PublicOnlyRoute";
+
+export default function App() {
+	return (
+		<ChakraProvider value={defaultSystem}>
+			<AuthProvider>
+				<BrowserRouter>
+					<Routes>
+						{/* Rotas Públicas */}
+						<Route element={<PublicOnlyRoute />}>
+							<Route element={<PublicLayout />}>
+								<Route path="/login" element={<LoginPage />} />
+							</Route>
+						</Route>
+
+						{/* Rotas de Usuário */}
+						<Route element={<ProtectedRoute requiredRole="user" />}>
+							<Route element={<UserLayout />}>
+								<Route path="/user/dashboard" element={<UserDashboardPage />} />
+							</Route>
+						</Route>
+
+						{/* Rotas de Admin */}
+						<Route element={<ProtectedRoute requiredRole="admin" />}>
+							<Route element={<AdminLayout />}>
+								<Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+							</Route>
+						</Route>
+
+						{/* Redirecionamentos */}
+						<Route path="*" element={<Navigate to="/login" />} />
+					</Routes>
+				</BrowserRouter>
+			</AuthProvider>
+		</ChakraProvider>
+	);
+}
