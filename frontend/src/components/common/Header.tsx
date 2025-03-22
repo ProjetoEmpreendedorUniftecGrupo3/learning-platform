@@ -6,7 +6,7 @@ const Header = () => {
 
 	return (
 		<Flex as="header" p={4} bg="teal.500" color="white" justify="space-between">
-			<Text fontSize="xl">Meu Projeto</Text>
+			<Text fontSize="xl">Plataforma de Aprendizado</Text>
 			{user && (
 				<Button colorPalette="red" onClick={logout}>
 					Sair

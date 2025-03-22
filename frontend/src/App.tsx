@@ -11,10 +11,25 @@ import { AdminDashboardPage } from "pages/admin/Dashboard";
 import LoginPage from "pages/public/Login";
 import { ProtectedRoute } from "common/ProtectedRoute";
 import { PublicOnlyRoute } from "common/PublicOnlyRoute";
+import { useEffect } from "react";
+import { HttpClient } from "lib/httpClient";
+import { toaster, Toaster } from "components/ui/toaster";
+import RegisterPage from "pages/public/Register";
 
 export default function App() {
+	useEffect(() => {
+		HttpClient.setErrorHandler(({ title, description, status }) => {
+			toaster.create({
+				title,
+				description,
+				duration: 5000,
+				type: status,
+			});
+		});
+	}, []);
 	return (
 		<ChakraProvider value={defaultSystem}>
+			<Toaster />
 			<AuthProvider>
 				<BrowserRouter>
 					<Routes>
@@ -22,6 +37,7 @@ export default function App() {
 						<Route element={<PublicOnlyRoute />}>
 							<Route element={<PublicLayout />}>
 								<Route path="/login" element={<LoginPage />} />
+								<Route path="/register" element={<RegisterPage />} />
 							</Route>
 						</Route>
 
