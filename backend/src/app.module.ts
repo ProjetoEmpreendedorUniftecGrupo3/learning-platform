@@ -1,10 +1,18 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
-
+const oneSecond = 1000;
 @Module({
+	providers: [
+		{
+			provide: APP_GUARD,
+			useClass: ThrottlerGuard,
+		},
+	],
 	imports: [
 		ConfigModule.forRoot({ isGlobal: true }),
 		TypeOrmModule.forRootAsync({
@@ -21,6 +29,17 @@ import { UsersModule } from "./users/users.module";
 			}),
 			inject: [ConfigService],
 		}),
+		ThrottlerModule.forRootAsync({
+			imports: [ConfigModule],
+			inject: [ConfigService],
+			useFactory: (config: ConfigService) => [
+				{
+					ttl: config.get<number>("THROTTLE_TTL", 60) * oneSecond, // Tempo em segundos
+					limit: config.get<number>("THROTTLE_LIMIT", 100), // Requisições por TTL
+				},
+			],
+		}),
+
 		UsersModule,
 		AuthModule,
 	],
