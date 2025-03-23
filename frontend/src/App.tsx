@@ -15,6 +15,8 @@ import { useEffect } from "react";
 import { HttpClient } from "lib/httpClient";
 import { toaster, Toaster } from "components/ui/toaster";
 import RegisterPage from "pages/public/Register";
+import RecoverPasswordPage from "pages/public/RecoverPassword";
+import ResetPasswordPage from "pages/public/ResetPassword";
 
 export default function App() {
 	useEffect(() => {
@@ -38,6 +40,8 @@ export default function App() {
 							<Route element={<PublicLayout />}>
 								<Route path="/login" element={<LoginPage />} />
 								<Route path="/register" element={<RegisterPage />} />
+								<Route path="/recover-password" element={<RecoverPasswordPage />} />
+								<Route path="/reset-password" element={<ResetPasswordPage />} />
 							</Route>
 						</Route>
 

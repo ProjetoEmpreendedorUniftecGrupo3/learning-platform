@@ -66,7 +66,7 @@ export default function LoginPage() {
 				</Field.Root>
 
 				<Flex mb={6}>
-					<Link color="blue.500" fontSize="sm">
+					<Link href="/recover-password" color="blue.500" fontSize="sm">
 						Esqueceu a senha?
 					</Link>
 				</Flex>

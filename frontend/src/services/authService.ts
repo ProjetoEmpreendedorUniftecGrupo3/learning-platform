@@ -37,4 +37,18 @@ export class AuthService {
 	static logout(): void {
 		localStorage.removeItem("access_token");
 	}
+
+	static async recoverPassword(email: string): Promise<void> {
+		await HttpClient.post("/auth/password/recover", { email });
+	}
+
+	static async resetPassword({ newPassword, token }: { newPassword: string; token: string }) {
+		await HttpClient.post(
+			"/auth/password/reset",
+			{ newPassword },
+			{
+				params: { token: token },
+			},
+		);
+	}
 }

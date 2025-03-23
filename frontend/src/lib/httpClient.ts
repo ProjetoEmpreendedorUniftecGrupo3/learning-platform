@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { AuthService } from "services/authService";
 
 type ErrorHandler = (error: {
@@ -59,31 +59,31 @@ export class HttpClient {
 			description: message,
 			status: "error",
 		});
+
 		switch (status) {
 			case 401:
 				AuthService.logout();
 				break;
-
 			case 403:
 				window.location.reload();
 				break;
 		}
 	}
 
-	static async get<T>(url: string) {
-		return this.instance.get<T>(url);
+	static async get<T>(url: string, config?: AxiosRequestConfig) {
+		return this.instance.get<T>(url, config);
 	}
 
-	static async post<T>(url: string, data?: unknown) {
-		return this.instance.post<T>(url, data);
+	static async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig) {
+		return this.instance.post<T>(url, data, config);
 	}
 
-	static async put<T>(url: string, data?: unknown) {
-		return this.instance.put<T>(url, data);
+	static async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig) {
+		return this.instance.put<T>(url, data, config);
 	}
 
-	static async delete<T>(url: string) {
-		return this.instance.delete<T>(url);
+	static async delete<T>(url: string, config?: AxiosRequestConfig) {
+		return this.instance.delete<T>(url, config);
 	}
 }
 
