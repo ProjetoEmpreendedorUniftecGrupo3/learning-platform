@@ -7,7 +7,7 @@ const oneSecond = 1000;
 export class AuthController {
 	constructor(private authService: AuthService) {}
 	@Post("login")
-	@Throttle({ default: { limit: 5, ttl: 60 * oneSecond } })
+	@Throttle({ default: { limit: 15, ttl: 60 * oneSecond } })
 	async login(@Body() loginDto: LoginDto) {
 		const user = await this.authService.validateUser(loginDto.email, loginDto.password);
 

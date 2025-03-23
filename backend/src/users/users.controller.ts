@@ -15,7 +15,7 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Post("register")
-	@Throttle({ default: { limit: 5, ttl: 60 * oneSecond } })
+	@Throttle({ default: { limit: 15, ttl: 60 * oneSecond } })
 	async register(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
 		const existingUser = await this.usersService.findByEmail(createUserDto.email);
 
