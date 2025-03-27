@@ -4,6 +4,12 @@ import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "./auth/auth.module";
+import { CategoriesModule } from "./categories/categories.module";
+import { ChallengesModule } from "./challenges/challenges.module";
+import { ChallengeCompletionModule } from "./completions/modules/challenge-completion.module";
+import { ModuleCompletionModule } from "./completions/modules/module-completion.module";
+import { ModulesModule } from "./modules/modules.module";
+import { TrailsModule } from "./trails/trails.module";
 import { UsersModule } from "./users/users.module";
 const oneSecond = 1000;
 @Module({
@@ -25,6 +31,10 @@ const oneSecond = 1000;
 				password: configService.get<string>("DB_PASSWORD"),
 				database: configService.get<string>("DB_DATABASE"),
 				entities: [__dirname + "/**/*.entity{.ts,.js}"],
+				extra: {
+					// Habilita UUID no PostgreSQL
+					extension: "uuid-ossp",
+				},
 				synchronize: true,
 			}),
 			inject: [ConfigService],
@@ -42,6 +52,12 @@ const oneSecond = 1000;
 
 		UsersModule,
 		AuthModule,
+		TrailsModule,
+		CategoriesModule,
+		ChallengeCompletionModule,
+		ChallengesModule,
+		ModuleCompletionModule,
+		ModulesModule,
 	],
 })
 export class AppModule {}
