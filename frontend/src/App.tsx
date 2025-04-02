@@ -6,6 +6,7 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 import UserLayout from "layouts/UserLayout";
 import { UserDashboardPage } from "pages/auth/Dashboard";
+import TrailPage from "pages/auth/Trail";
 import { AdminLayout } from "layouts/AdminLayout";
 import { AdminDashboardPage } from "pages/admin/Dashboard";
 import LoginPage from "pages/public/Login";
@@ -49,6 +50,7 @@ export default function App() {
 						<Route element={<ProtectedRoute requiredRole="user" />}>
 							<Route element={<UserLayout />}>
 								<Route path="/user/dashboard" element={<UserDashboardPage />} />
+								<Route path="/user/trail/:id" element={<TrailPage />} />
 							</Route>
 						</Route>
 
