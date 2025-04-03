@@ -20,4 +20,10 @@ export class TrailsController {
 	async getTrail(@Param("id") trailId: string, @CurrentUser() user: User) {
 		return this.trailsService.getTrailWithProgress(user.id, trailId);
 	}
+
+	@Get()
+	@UseGuards(JwtAuthGuard)
+	async getAll() {
+		return this.trailsService.findAll();
+	}
 }

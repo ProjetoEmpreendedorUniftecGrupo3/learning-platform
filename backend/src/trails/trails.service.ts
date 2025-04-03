@@ -36,6 +36,12 @@ export class TrailsService {
 		return trail;
 	}
 
+	async findAll(): Promise<Trail[]> {
+		const trails = await this.trailsRepository.find();
+
+		return trails;
+	}
+
 	async getTrailWithProgress(userId: string, trailId: string): Promise<TrailResponseDto> {
 		const trail = await this.trailsRepository.findOne({
 			where: { id: trailId },

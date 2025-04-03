@@ -20,6 +20,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "react-indiana-drag-scroll": "^3.0.4-alpha",
     "react-router-dom": "^7.4.0",
     "yup": "^1.6.1"
   },
