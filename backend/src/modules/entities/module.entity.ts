@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ModuleContent } from "@/module-content/entities/module-content.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "../../categories/entities/category.entity";
 
 @Entity()
@@ -11,4 +12,6 @@ export class CourseModule {
 
 	@ManyToOne(() => Category, (category) => category.modules)
 	category: Category;
+	@OneToMany(() => ModuleContent, (moduleContent) => moduleContent.courseModule)
+	contents: ModuleContent[];
 }

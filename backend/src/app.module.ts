@@ -8,6 +8,7 @@ import { CategoriesModule } from "./categories/categories.module";
 import { ChallengesModule } from "./challenges/challenges.module";
 import { ChallengeCompletionModule } from "./completions/modules/challenge-completion.module";
 import { ModuleCompletionModule } from "./completions/modules/module-completion.module";
+import { ModuleContentModule } from "./module-content/module-content.module";
 import { ModulesModule } from "./modules/modules.module";
 import { TrailsModule } from "./trails/trails.module";
 import { UsersModule } from "./users/users.module";
@@ -58,6 +59,7 @@ const oneSecond = 1000;
 		ChallengesModule,
 		ModuleCompletionModule,
 		ModulesModule,
+		ModuleContentModule,
 	],
 })
 export class AppModule {}
