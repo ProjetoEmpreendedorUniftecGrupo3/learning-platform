@@ -27,28 +27,39 @@ export class ModulesService {
 		return this.modulesRepository.save(module);
 	}
 
-	async findOne(id: string): Promise<CourseModule> {
-		const module = await this.modulesRepository.findOne({
-			where: { id },
-			relations: ["contents"],
-		});
+	async findOne(
+		id: string,
+		user: User,
+	): Promise<Pick<CourseModule, "id" | "title" | "contents"> & { completed: boolean }> {
+		const courseModule = await this.modulesRepository
+			.createQueryBuilder("module")
+			.leftJoinAndSelect("module.moduleCompletions", "completion", "completion.userId = :userId", {
+				userId: user.id,
+			})
+			.leftJoinAndSelect("module.contents", "contents")
+			.where("module.id = :id", { id })
+			.getOne();
 
-		if (!module) {
+		if (!courseModule) {
 			throw new NotFoundException(`Module with ID ${id} not found`);
 		}
-
-		return module;
+		return {
+			id: courseModule.id,
+			title: courseModule.title,
+			contents: courseModule.contents,
+			completed: courseModule.moduleCompletions.length > 0,
+		};
 	}
 
-	async updateCompletion(
-		courseModuleId: string,
-		updateDto: UpdateModuleCompletionDto,
-		user: User,
-	): Promise<CourseModule> {
-		const courseModule = await this.modulesRepository.findOne({
-			where: { id: courseModuleId },
-			relations: ["moduleCompletions", "moduleCompletions.user"],
-		});
+	async updateCompletion(courseModuleId: string, updateDto: UpdateModuleCompletionDto, user: User) {
+		const courseModule = await this.modulesRepository
+			.createQueryBuilder("module")
+			.leftJoinAndSelect("module.moduleCompletions", "completion", "completion.userId = :userId", {
+				userId: user.id,
+			})
+			.leftJoinAndSelect("completion.user", "user")
+			.where("module.id = :courseModuleId", { courseModuleId })
+			.getOne();
 
 		if (!courseModule) {
 			throw new NotFoundException("Module not found");
@@ -69,9 +80,6 @@ export class ModulesService {
 			}
 		}
 
-		return this.modulesRepository.findOne({
-			where: { id: courseModuleId },
-			relations: ["moduleCompletions"],
-		});
+		return await this.findOne(courseModuleId, user);
 	}
 }

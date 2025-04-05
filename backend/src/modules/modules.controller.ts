@@ -18,8 +18,8 @@ export class ModulesController {
 
 	@Get(":id")
 	@UseGuards(JwtAuthGuard)
-	async findOne(@Param("id") id: string) {
-		return this.modulesService.findOne(id);
+	async findOne(@Param("id") id: string, @CurrentUser() user: User) {
+		return this.modulesService.findOne(id, user);
 	}
 
 	@Patch(":id/completion")

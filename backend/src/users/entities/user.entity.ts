@@ -1,5 +1,6 @@
+import { ModuleCompletion } from "@/module-completions/entities/module-completion.entity";
 import * as bcrypt from "bcrypt";
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum UserRole {
 	USER = "user",
@@ -32,6 +33,9 @@ export class User {
 
 	@Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
 	createdAt: Date;
+
+	@OneToMany(() => ModuleCompletion, (moduleCompletion) => moduleCompletion.user)
+	moduleCompletions: ModuleCompletion[];
 
 	@BeforeInsert()
 	async hashPassword() {
