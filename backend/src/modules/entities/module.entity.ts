@@ -1,3 +1,4 @@
+import { ModuleCompletion } from "@/module-completions/entities/module-completion.entity";
 import { ModuleContent } from "@/module-contents/entities/module-content.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "../../categories/entities/category.entity";
@@ -14,4 +15,6 @@ export class CourseModule {
 	category: Category;
 	@OneToMany(() => ModuleContent, (moduleContent) => moduleContent.courseModule)
 	contents: ModuleContent[];
+	@OneToMany(() => ModuleCompletion, (moduleCompletion) => moduleCompletion.module)
+	moduleCompletions: ModuleCompletion[];
 }

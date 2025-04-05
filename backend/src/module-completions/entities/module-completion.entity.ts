@@ -1,6 +1,6 @@
 import { CourseModule } from "@/modules/entities/module.entity";
 import { User } from "@/users/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class ModuleCompletion {
@@ -13,6 +13,6 @@ export class ModuleCompletion {
 	@ManyToOne(() => CourseModule)
 	module: CourseModule;
 
-	@Column({ type: "timestamp" })
+	@CreateDateColumn()
 	completedAt: Date;
 }
