@@ -1,9 +1,9 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { CreateModuleContentDto } from "./dto/create-module-content.dto";
 import { ModuleContent } from "./entities/module-content.entity";
-import { ModuleContentService } from "./module-content.service";
+import { ModuleContentService } from "./module-contents.service";
 
-@Controller("module-content")
+@Controller("module-contents")
 export class ModuleContentController {
 	constructor(private readonly moduleContentService: ModuleContentService) {}
 

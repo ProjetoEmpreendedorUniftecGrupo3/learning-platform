@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { CreateChallengeCompletionDto } from "../dto/create-challenge-completion.dto";
-import { ChallengeCompletionsService } from "../services/challenge-completions.service";
+import { ChallengeCompletionsService } from "./challenge-completions.service";
+import { CreateChallengeCompletionDto } from "./dto/create-challenge-completion.dto";
 
 @Controller("challenge-completions")
 export class ChallengeCompletionsController {

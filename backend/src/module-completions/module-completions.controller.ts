@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { CreateModuleCompletionDto } from "../dto/create-module-completion.dto";
-import { ModuleCompletionsService } from "../services/module-completions.service";
+import { CreateModuleCompletionDto } from "./dto/create-module-completion.dto";
+import { ModuleCompletionsService } from "./module-completions.service";
 
 @Controller("module-completions")
 export class ModuleCompletionsController {

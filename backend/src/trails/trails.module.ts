@@ -1,7 +1,7 @@
 import { Category } from "@/categories/entities/category.entity";
+import { ChallengeCompletion } from "@/challenge-completions/entities/challenge-completion.entity";
 import { Challenge } from "@/challenges/entities/challenge.entity";
-import { ChallengeCompletion } from "@/completions/entities/challenge-completion.entity";
-import { ModuleCompletion } from "@/completions/entities/module-completion.entity";
+import { ModuleCompletion } from "@/module-completions/entities/module-completion.entity";
 import { CourseModule } from "@/modules/entities/module.entity";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";

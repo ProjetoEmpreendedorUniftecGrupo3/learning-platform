@@ -3,8 +3,8 @@ import { UsersService } from "@/users/users.service";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CreateChallengeCompletionDto } from "../dto/create-challenge-completion.dto";
-import { ChallengeCompletion } from "../entities/challenge-completion.entity";
+import { CreateChallengeCompletionDto } from "./dto/create-challenge-completion.dto";
+import { ChallengeCompletion } from "./entities/challenge-completion.entity";
 
 @Injectable()
 export class ChallengeCompletionsService {

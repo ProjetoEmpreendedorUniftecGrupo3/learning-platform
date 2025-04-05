@@ -3,8 +3,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { CourseModule } from "@/modules/entities/module.entity";
 import { ModuleContent } from "./entities/module-content.entity";
-import { ModuleContentController } from "./module-content.controller";
-import { ModuleContentService } from "./module-content.service";
+import { ModuleContentController } from "./module-contents.controller";
+import { ModuleContentService } from "./module-contents.service";
 
 @Module({
 	imports: [TypeOrmModule.forFeature([ModuleContent, CourseModule])],

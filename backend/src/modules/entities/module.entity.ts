@@ -1,4 +1,4 @@
-import { ModuleContent } from "@/module-content/entities/module-content.entity";
+import { ModuleContent } from "@/module-contents/entities/module-content.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "../../categories/entities/category.entity";
 

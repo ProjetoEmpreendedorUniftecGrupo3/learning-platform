@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { ChallengeCompletion } from "@/completions/entities/challenge-completion.entity";
-import { ModuleCompletion } from "@/completions/entities/module-completion.entity";
+import { ChallengeCompletion } from "@/challenge-completions/entities/challenge-completion.entity";
+import { ModuleCompletion } from "@/module-completions/entities/module-completion.entity";
 import { CreateTrailDto } from "./dto/create-trail.dto";
 import { TrailResponseDto } from "./dto/trail-response.dto";
 import { Trail } from "./entities/trail.entity";
