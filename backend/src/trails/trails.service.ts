@@ -58,36 +58,37 @@ export class TrailsService {
 			},
 		});
 
-		const categoriesWithProgress = await Promise.all(
-			trail.categories.map(async (category, index) => {
-				const modulesWithStatus = await Promise.all(
-					category.modules.map(async (module) => ({
-						...module,
-						completed: await this.isModuleCompleted(userId, module.id),
-					})),
-				);
+		let hasIncompletedChallenge = false;
+		const categoriesWithProgress = [];
 
-				const challengeStatus = category.challenge
-					? {
-							id: category.challenge.id,
-							completed: await this.isChallengeCompleted(userId, category.challenge.id),
-						}
-					: null;
+		for (const category of trail.categories) {
+			const modulesWithStatus = await Promise.all(
+				category.modules.map(async (module) => ({
+					...module,
+					completed: await this.isModuleCompleted(userId, module.id),
+				})),
+			);
 
-				const previousCategory = trail.categories[index - 1];
-				const blocked =
-					index > 0 && previousCategory?.challenge
-						? !(await this.isChallengeCompleted(userId, previousCategory.challenge.id))
-						: false;
+			const challengeStatus = category.challenge
+				? {
+						id: category.challenge.id,
+						completed: await this.isChallengeCompleted(userId, category.challenge.id),
+					}
+				: null;
 
-				return {
-					...category,
-					modules: modulesWithStatus,
-					challenge: challengeStatus,
-					blocked,
-				};
-			}),
-		);
+			const blocked = hasIncompletedChallenge;
+
+			categoriesWithProgress.push({
+				...category,
+				modules: modulesWithStatus,
+				challenge: challengeStatus,
+				blocked,
+			});
+
+			if (challengeStatus && !challengeStatus.completed) {
+				hasIncompletedChallenge = true;
+			}
+		}
 
 		return {
 			trail: {

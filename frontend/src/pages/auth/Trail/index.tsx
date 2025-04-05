@@ -1,6 +1,6 @@
 import { Box, Text, Flex, Spinner } from "@chakra-ui/react";
 import { Category, CategoryModule, Trail } from "types/trail";
-import { Lock } from "lucide-react";
+import { LockOpen, Lock, Check } from "lucide-react";
 import { HttpClient } from "lib/httpClient";
 import { useEffect, useState } from "react";
 import { useTrail } from "contexts/UserContext";
@@ -24,7 +24,12 @@ const CHALLENGE_SIZE = 80;
 const CHALLENGE_CONTAINER_WIDTH = 90;
 const CHALLENGE_CONTAINER_GAP = 0;
 
-const ModuleNode = ({ id, title, index }: CategoryModule & { index: number }) => {
+interface ModuleNodeProps extends CategoryModule {
+	index: number;
+	blocked: boolean;
+}
+
+const ModuleNode = ({ id, title, index, completed, blocked }: ModuleNodeProps) => {
 	return (
 		<Box
 			key={id}
@@ -42,65 +47,79 @@ const ModuleNode = ({ id, title, index }: CategoryModule & { index: number }) =>
 				transform="translateY(-50%)"
 			/>
 			{index > 0 && (
-				<>
-					<Box
-						position="absolute"
-						top={-(MODULE_GAP + MODULE_HEIGHT / 2) + LINES_SIZE / 2 + "px"}
-						left={-(CATEGORY_MODULE_GAP - CATEGORY_MODULE_GAP / 3) + "px"}
-						borderLeft={LINES_SIZE + "px solid"}
-						borderColor={lineColor}
-						height={MODULE_GAP + MODULE_HEIGHT + "px"}
-						transform="translateX(-50%)"
-					/>
-				</>
+				<Box
+					position="absolute"
+					top={-(MODULE_GAP + MODULE_HEIGHT / 2) + LINES_SIZE / 2 + "px"}
+					left={-(CATEGORY_MODULE_GAP - CATEGORY_MODULE_GAP / 3) + "px"}
+					borderLeft={LINES_SIZE + "px solid"}
+					borderColor={lineColor}
+					height={MODULE_GAP + MODULE_HEIGHT + "px"}
+					transform="translateX(-50%)"
+				/>
 			)}
 
 			{/* Conteúdo do nó */}
 			<Flex
 				align="center"
 				border="1px solid"
-				borderColor={lineColor}
+				borderColor={completed ? "green.500" : lineColor}
 				borderRadius="full"
 				px="16px"
 				py="4px"
-				bg="white"
+				bg={completed ? "green.50" : "white"}
 				fontWeight="medium"
 				position="relative"
 				w="fit-content"
 				h={MODULE_HEIGHT + "px"}
 				alignItems="center"
 				justifyContent="center"
+				boxShadow="sm"
 			>
-				<Text textWrap="nowrap">{title}</Text>
+				{completed && <Check size={16} color="green" style={{ marginRight: 4 }} />}
+				<Text whiteSpace="nowrap">{title}</Text>
+				{blocked && (
+					<Box
+						position="absolute"
+						top="0"
+						left="0"
+						w="100%"
+						h="100%"
+						bg="rgba(0,0,0,0.5)"
+						borderRadius="full"
+						display="flex"
+						alignItems="center"
+						justifyContent="center"
+					>
+						<Lock color="white" />
+					</Box>
+				)}
 			</Flex>
 		</Box>
 	);
 };
+
+interface CategoryNodeProps extends Category {
+	index: number;
+	lastCategory: Category | undefined;
+}
 
 const CategoryNode = ({
 	id,
 	name,
 	modules,
 	challenge,
+	blocked,
 	index,
 	lastCategory,
-}: Category & { index: number; lastCategory: Category }) => {
+}: CategoryNodeProps) => {
 	const lastCategoryHeight =
-		index > 0
+		index > 0 && lastCategory
 			? MODULE_HEIGHT +
 				FIRST_MODULE_MARGIN +
 				(lastCategory.modules.length - 1) * (MODULE_HEIGHT + MODULE_GAP) -
 				CATEGORY_HEIGHT
 			: 0;
 
-	console.log(
-		MODULE_HEIGHT +
-			FIRST_MODULE_MARGIN +
-			(modules.length > 0 ? modules.length - 1 : 0) * (MODULE_GAP + MODULE_HEIGHT) +
-			CATEGORY_MARGIN +
-			CATEGORY_HEIGHT / 2 -
-			CHALLENGE_SIZE / 2,
-	);
 	return (
 		<Flex
 			key={id}
@@ -108,7 +127,7 @@ const CategoryNode = ({
 			mt={CATEGORY_MARGIN + "px"}
 			ml={index > 0 ? CATEGORY_WIDTH * 2 * index : 0}
 		>
-			{/* Linha que conecta o nó ao seu "pai" (exceto se for nível 0) */}
+			{/* Conexões se não for a primeira categoria */}
 			{index > 0 && (
 				<>
 					<Box
@@ -152,20 +171,38 @@ const CategoryNode = ({
 				justifyContent="center"
 				px="16px"
 				py="4px"
+				boxShadow="sm"
 			>
-				<Text textWrap="nowrap">{name}</Text>
+				<Text whiteSpace="nowrap">{name}</Text>
+				{blocked && (
+					<Box
+						position="absolute"
+						top="0"
+						left="0"
+						w="100%"
+						h="100%"
+						bg="rgba(0,0,0,0.5)"
+						borderRadius="full"
+						display="flex"
+						alignItems="center"
+						justifyContent="center"
+					>
+						<Lock color="white" />
+					</Box>
+				)}
 			</Flex>
 
-			{/* Renderizar filhos, se existirem */}
+			{/* Renderizar módulos se existirem */}
 			{modules && modules.length > 0 && (
 				<Box ml={CATEGORY_MODULE_GAP + "px"}>
 					{modules.map((cModule, index) => (
-						<ModuleNode key={index} index={index} {...cModule} />
+						<ModuleNode key={cModule.id} index={index} blocked={blocked} {...cModule} />
 					))}
 				</Box>
 			)}
 
-			{challenge ? (
+			{/* Desafio */}
+			{challenge && (
 				<Flex
 					position="absolute"
 					left={CATEGORY_WIDTH / 2 - CHALLENGE_CONTAINER_WIDTH / 2 + "px"}
@@ -189,18 +226,23 @@ const CategoryNode = ({
 						width={CHALLENGE_SIZE + "px"}
 						borderRadius="full"
 						border="1px solid"
-						borderColor={lineColor}
 						alignItems="center"
 						justifyContent="center"
+						bg={challenge.completed ? "green.50" : "white"}
+						borderColor={challenge.completed ? "green.500" : lineColor}
+						boxShadow="sm"
 					>
-						<Lock />
+						{challenge.completed ? <LockOpen color="green" /> : <Lock />}
 					</Flex>
-					<Text textAlign={"center"}>Desafio</Text>
+					<Text textAlign="center" color={challenge.completed ? "green.700" : "black"}>
+						Desafio
+					</Text>
 				</Flex>
-			) : null}
+			)}
 		</Flex>
 	);
 };
+
 const Tree = ({ trail }: Trail) => {
 	return (
 		<Box p={SCREEN_PADDING + "px"} position="relative" width="fit-content">
@@ -216,8 +258,9 @@ const Tree = ({ trail }: Trail) => {
 				h={TRAIL_HEIGHT + "px"}
 				alignItems="center"
 				justifyContent="center"
+				boxShadow="sm"
 			>
-				<Text fontSize="lg" textWrap="nowrap">
+				<Text fontSize="lg" whiteSpace="nowrap">
 					{trail.name}
 				</Text>
 			</Flex>
@@ -233,7 +276,7 @@ const Tree = ({ trail }: Trail) => {
 			<Box position="relative" ml={(TRAIL_WIDTH - CATEGORY_WIDTH) / 2 + "px"}>
 				{trail.categories.map((category, index) => (
 					<CategoryNode
-						key={index}
+						key={category.id}
 						index={index}
 						{...category}
 						lastCategory={trail.categories[index - 1]}
@@ -243,6 +286,7 @@ const Tree = ({ trail }: Trail) => {
 		</Box>
 	);
 };
+
 const TrailPage = () => {
 	const { selectedTrailId } = useTrail();
 	const [trailData, setTrailData] = useState<Trail | null>(null);
