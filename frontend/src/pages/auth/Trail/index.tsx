@@ -1,4 +1,4 @@
-import { Box, Text, Flex, Spinner } from "@chakra-ui/react";
+import { Box, Text, Flex, Spinner, Center } from "@chakra-ui/react";
 import { Category, CategoryModule, Trail } from "types/trail";
 import { LockOpen, Lock, Check } from "lucide-react";
 import { HttpClient } from "lib/httpClient";
@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useTrail } from "contexts/UserContext";
 import ScrollContainer from "react-indiana-drag-scroll";
 import "react-indiana-drag-scroll/dist/style.css";
+import { ModuleDialog } from "./components/ModuleModal";
 
 const lineColor = "gray";
 
@@ -27,14 +28,17 @@ const CHALLENGE_CONTAINER_GAP = 0;
 interface ModuleNodeProps extends CategoryModule {
 	index: number;
 	blocked: boolean;
+	onClick: () => void;
 }
 
-const ModuleNode = ({ id, title, index, completed, blocked }: ModuleNodeProps) => {
+const ModuleNode = ({ id, title, index, completed, blocked, onClick }: ModuleNodeProps) => {
 	return (
 		<Box
 			key={id}
 			position="relative"
 			mt={index > 0 ? MODULE_GAP + "px" : FIRST_MODULE_MARGIN + "px"}
+			onClick={!blocked ? onClick : undefined}
+			cursor={!blocked ? "pointer" : "drag"}
 		>
 			{/* Linha que conecta o nó ao seu "pai" (exceto se for nível 0) */}
 			<Box
@@ -101,6 +105,7 @@ const ModuleNode = ({ id, title, index, completed, blocked }: ModuleNodeProps) =
 interface CategoryNodeProps extends Category {
 	index: number;
 	lastCategory: Category | undefined;
+	setSelectedModuleId: (moduleId: string) => void;
 }
 
 const CategoryNode = ({
@@ -111,6 +116,7 @@ const CategoryNode = ({
 	blocked,
 	index,
 	lastCategory,
+	setSelectedModuleId,
 }: CategoryNodeProps) => {
 	const lastCategoryHeight =
 		index > 0 && lastCategory
@@ -196,7 +202,15 @@ const CategoryNode = ({
 			{modules && modules.length > 0 && (
 				<Box ml={CATEGORY_MODULE_GAP + "px"}>
 					{modules.map((cModule, index) => (
-						<ModuleNode key={cModule.id} index={index} blocked={blocked} {...cModule} />
+						<ModuleNode
+							key={cModule.id}
+							index={index}
+							blocked={blocked}
+							onClick={() => {
+								setSelectedModuleId(cModule.id);
+							}}
+							{...cModule}
+						/>
 					))}
 				</Box>
 			)}
@@ -243,7 +257,10 @@ const CategoryNode = ({
 	);
 };
 
-const Tree = ({ trail }: Trail) => {
+const Tree = ({
+	trail,
+	setSelectedModuleId,
+}: Trail & { setSelectedModuleId: (moduleId: string) => void }) => {
 	return (
 		<Box p={SCREEN_PADDING + "px"} position="relative" width="fit-content">
 			<Flex
@@ -280,6 +297,7 @@ const Tree = ({ trail }: Trail) => {
 						index={index}
 						{...category}
 						lastCategory={trail.categories[index - 1]}
+						setSelectedModuleId={setSelectedModuleId}
 					/>
 				))}
 			</Box>
@@ -291,6 +309,8 @@ const TrailPage = () => {
 	const { selectedTrailId } = useTrail();
 	const [trailData, setTrailData] = useState<Trail | null>(null);
 	const [loading, setLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [selectedModuleId, setSelectedModuleId] = useState<string | undefined>(undefined);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -313,12 +333,31 @@ const TrailPage = () => {
 		fetchTrail();
 	}, [selectedTrailId]);
 
+	useEffect(() => {
+		if (selectedModuleId) {
+			setOpen(true);
+		}
+	}, [selectedModuleId]);
+
+	const onClose = () => {
+		setOpen(false);
+		setSelectedModuleId(undefined);
+	};
+
 	if (!selectedTrailId) {
-		return <Text>Selecione uma trilha no menu lateral</Text>;
+		return (
+			<Center style={{ width: `calc(100vw - 250px)`, height: "90vh" }}>
+				<Text fontSize="xl">Selecione uma trilha no menu lateral</Text>
+			</Center>
+		);
 	}
 
 	if (loading) {
-		return <Spinner />;
+		return (
+			<Center style={{ width: `calc(100vw - 250px)`, height: "90vh" }}>
+				<Spinner size="xl" />
+			</Center>
+		);
 	}
 
 	if (error) {
@@ -326,9 +365,12 @@ const TrailPage = () => {
 	}
 
 	return trailData ? (
-		<ScrollContainer style={{ width: `calc(100vw - 250px)`, height: "90vh", overflow: "auto" }}>
-			<Tree trail={trailData.trail} />
-		</ScrollContainer>
+		<>
+			<ScrollContainer style={{ width: `calc(100vw - 250px)`, height: "90vh", overflow: "auto" }}>
+				<Tree trail={trailData.trail} setSelectedModuleId={setSelectedModuleId} />
+			</ScrollContainer>
+			<ModuleDialog open={open} onClose={onClose} moduleId={selectedModuleId} />
+		</>
 	) : null;
 };
 

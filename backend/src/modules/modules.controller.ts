@@ -3,7 +3,7 @@ import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { User } from "@/users/entities/user.entity";
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { CreateModuleDto } from "./dto/create-module.dto";
-import { UpdateModuleCompletionDto } from "./dto/update-mocule-completion.dto";
+import { UpdateModuleCompletionDto } from "./dto/update-module-completion.dto";
 import { ModulesService } from "./modules.service";
 
 @Controller("modules")

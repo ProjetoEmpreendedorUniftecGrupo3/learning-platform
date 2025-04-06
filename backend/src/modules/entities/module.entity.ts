@@ -11,6 +11,9 @@ export class CourseModule {
 	@Column()
 	title: string;
 
+	@Column()
+	description: string;
+
 	@ManyToOne(() => Category, (category) => category.modules)
 	category: Category;
 	@OneToMany(() => ModuleContent, (moduleContent) => moduleContent.courseModule)

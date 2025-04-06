@@ -5,7 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CategoriesService } from "../categories/categories.service";
 import { CreateModuleDto } from "./dto/create-module.dto";
-import { UpdateModuleCompletionDto } from "./dto/update-mocule-completion.dto";
+import { UpdateModuleCompletionDto } from "./dto/update-module-completion.dto";
 import { CourseModule } from "./entities/module.entity";
 
 @Injectable()
@@ -30,7 +30,7 @@ export class ModulesService {
 	async findOne(
 		id: string,
 		user: User,
-	): Promise<Pick<CourseModule, "id" | "title" | "contents"> & { completed: boolean }> {
+	): Promise<Pick<CourseModule, "id" | "title" | "description" | "contents"> & { completed: boolean }> {
 		const courseModule = await this.modulesRepository
 			.createQueryBuilder("module")
 			.leftJoinAndSelect("module.moduleCompletions", "completion", "completion.userId = :userId", {
@@ -46,6 +46,7 @@ export class ModulesService {
 		return {
 			id: courseModule.id,
 			title: courseModule.title,
+			description: courseModule.description,
 			contents: courseModule.contents,
 			completed: courseModule.moduleCompletions.length > 0,
 		};
