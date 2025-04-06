@@ -44,22 +44,28 @@ export const Sidebar = () => {
 				Minhas Trilhas
 			</Text>
 
-			{loadingTrails
-				? Array(3)
-						.fill(0)
-						.map((_, i) => <Skeleton key={i} h="40px" mb={2} />)
-				: trails.map((trail) => (
-						<Button
-							key={trail.id}
-							w="full"
-							justifyContent="flex-start"
-							mb={2}
-							variant={selectedTrailId === trail.id ? "solid" : "ghost"}
-							onClick={() => setSelectedTrailId(trail.id)}
-						>
-							{trail.name}
-						</Button>
-					))}
+			{loadingTrails ? (
+				Array(3)
+					.fill(0)
+					.map((_, i) => <Skeleton key={i} h="40px" mb={2} />)
+			) : trails.length ? (
+				trails.map((trail) => (
+					<Button
+						key={trail.id}
+						w="full"
+						justifyContent="flex-start"
+						mb={2}
+						variant={selectedTrailId === trail.id ? "solid" : "ghost"}
+						onClick={() => setSelectedTrailId(trail.id)}
+					>
+						{trail.name}
+					</Button>
+				))
+			) : (
+				<Text fontSize="xs" color="gray.600">
+					Ainda não há trilhas aqui
+				</Text>
+			)}
 		</Box>
 	);
 };

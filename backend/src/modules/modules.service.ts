@@ -22,6 +22,7 @@ export class ModulesService {
 		const category = await this.categoriesService.findOne(createModuleDto.categoryId);
 		const module = this.modulesRepository.create({
 			title: createModuleDto.title,
+			description: createModuleDto.description,
 			category,
 		});
 		return this.modulesRepository.save(module);

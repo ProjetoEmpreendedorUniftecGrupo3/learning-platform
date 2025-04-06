@@ -1,4 +1,4 @@
-import { Box, Text, Flex, Spinner, Center } from "@chakra-ui/react";
+import { Box, Text, Flex, Spinner, Center, Progress } from "@chakra-ui/react";
 import { Category, CategoryModule, Trail } from "types/trail";
 import { LockOpen, Lock, Check } from "lucide-react";
 import { HttpClient } from "lib/httpClient";
@@ -126,6 +126,9 @@ const CategoryNode = ({
 				CATEGORY_HEIGHT
 			: 0;
 
+	const completedModulesLength = modules.filter((m) => m.completed).length;
+	const categoryCompleted = completedModulesLength === modules.length && modules.length > 0;
+
 	return (
 		<Flex
 			key={id}
@@ -166,9 +169,7 @@ const CategoryNode = ({
 			<Flex
 				align="center"
 				border="1px solid"
-				borderColor={lineColor}
 				borderRadius="full"
-				bg="white"
 				fontWeight="medium"
 				position="relative"
 				w={CATEGORY_WIDTH + "px"}
@@ -178,8 +179,26 @@ const CategoryNode = ({
 				px="16px"
 				py="4px"
 				boxShadow="sm"
+				borderColor={categoryCompleted ? "green.500" : lineColor}
+				bg={categoryCompleted ? "green.50" : "white"}
 			>
-				<Text whiteSpace="nowrap">{name}</Text>
+				<Box width="100%" mx="24px">
+					<Text textAlign="center" whiteSpace="nowrap" mb="4px">
+						{name}
+					</Text>
+					<Progress.Root
+						min={0}
+						max={modules.length || 1}
+						value={completedModulesLength}
+						variant="subtle"
+						size="xs"
+						colorPalette={categoryCompleted ? "green" : undefined}
+					>
+						<Progress.Track>
+							<Progress.Range />
+						</Progress.Track>
+					</Progress.Root>
+				</Box>
 				{blocked && (
 					<Box
 						position="absolute"

@@ -58,6 +58,10 @@ export class TrailsService {
 			},
 		});
 
+		if (!trail) {
+			throw new NotFoundException(`Trail with ID ${trailId} not found`);
+		}
+
 		let hasIncompletedChallenge = false;
 		const categoriesWithProgress = [];
 
