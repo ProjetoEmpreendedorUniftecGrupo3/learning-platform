@@ -82,6 +82,10 @@ export class HttpClient {
 		return this.instance.put<T>(url, data, config);
 	}
 
+	static async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig) {
+		return this.instance.patch<T>(url, data, config);
+	}
+
 	static async delete<T>(url: string, config?: AxiosRequestConfig) {
 		return this.instance.delete<T>(url, config);
 	}

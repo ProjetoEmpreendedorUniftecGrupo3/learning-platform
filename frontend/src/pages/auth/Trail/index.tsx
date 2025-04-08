@@ -332,24 +332,24 @@ const TrailPage = () => {
 	const [selectedModuleId, setSelectedModuleId] = useState<string | undefined>(undefined);
 	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		const fetchTrail = async () => {
-			if (selectedTrailId) {
-				setLoading(true);
-				setError(null);
-				try {
-					const response = await HttpClient.get<Trail>(`/trails/${selectedTrailId}`);
-					setTrailData(response.data);
-				} catch (error) {
-					console.error("Erro ao buscar trilha:", error);
-					setError("Não foi possível carregar a trilha");
-				} finally {
-					setLoading(false);
-				}
+	const fetchTrail = async () => {
+		if (selectedTrailId) {
+			setLoading(true);
+			setError(null);
+			try {
+				const response = await HttpClient.get<Trail>(`/trails/${selectedTrailId}`);
+				setTrailData(response.data);
+			} catch (error) {
+				console.error("Erro ao buscar trilha:", error);
+				setError("Não foi possível carregar a trilha");
+			} finally {
+				setLoading(false);
 			}
-		};
-
+		}
+	};
+	useEffect(() => {
 		fetchTrail();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedTrailId]);
 
 	useEffect(() => {
@@ -371,24 +371,27 @@ const TrailPage = () => {
 		);
 	}
 
-	if (loading) {
-		return (
-			<Center style={{ width: `calc(100vw - 250px)`, height: "90vh" }}>
-				<Spinner size="xl" />
-			</Center>
-		);
-	}
-
 	if (error) {
 		return <Text color="red.500">{error}</Text>;
 	}
 
 	return trailData ? (
 		<>
-			<ScrollContainer style={{ width: `calc(100vw - 250px)`, height: "90vh", overflow: "auto" }}>
-				<Tree trail={trailData.trail} setSelectedModuleId={setSelectedModuleId} />
-			</ScrollContainer>
-			<ModuleDialog open={open} onClose={onClose} moduleId={selectedModuleId} />
+			{loading ? (
+				<Center style={{ width: `calc(100vw - 250px)`, height: "90vh" }}>
+					<Spinner size="xl" />
+				</Center>
+			) : (
+				<ScrollContainer style={{ width: `calc(100vw - 250px)`, height: "90vh", overflow: "auto" }}>
+					<Tree trail={trailData.trail} setSelectedModuleId={setSelectedModuleId} />
+				</ScrollContainer>
+			)}
+			<ModuleDialog
+				open={open}
+				onClose={onClose}
+				moduleId={selectedModuleId}
+				onChangeStatus={fetchTrail}
+			/>
 		</>
 	) : null;
 };

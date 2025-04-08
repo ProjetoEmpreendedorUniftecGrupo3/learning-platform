@@ -1,18 +1,34 @@
-import { Dialog, Button, Spinner, Box, Text, VStack, Link, HStack, Tag } from "@chakra-ui/react";
+import {
+	Dialog,
+	Button,
+	Spinner,
+	Box,
+	Text,
+	VStack,
+	Link,
+	HStack,
+	Tag,
+	Select,
+	createListCollection,
+	Flex,
+} from "@chakra-ui/react";
 import { HttpClient } from "lib/httpClient";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Module, ModuleContentType } from "types/module";
 
 type ModuleDialogProps = {
 	open: boolean;
 	onClose: () => void;
 	moduleId?: string;
+	onChangeStatus: () => void;
 };
 
-export function ModuleDialog({ open, onClose, moduleId }: ModuleDialogProps) {
+export function ModuleDialog({ open, onClose, moduleId, onChangeStatus }: ModuleDialogProps) {
 	const [moduleData, setModuleData] = useState<Module | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+	const [selectedOption, setSelectedOption] = useState("pendente");
+	const [loadingStatus, setLoadingStatus] = useState(false);
 
 	useEffect(() => {
 		if (!open || !moduleId) return;
@@ -26,6 +42,13 @@ export function ModuleDialog({ open, onClose, moduleId }: ModuleDialogProps) {
 			.catch(() => setError("Erro ao carregar os dados do módulo."))
 			.finally(() => setLoading(false));
 	}, [open, moduleId]);
+
+	useEffect(() => {
+		if (moduleData) {
+			setSelectedOption(moduleData.completed ? "concluido" : "pendente");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [moduleData?.completed]);
 
 	const getTagLabel = (type: ModuleContentType) => {
 		switch (type) {
@@ -43,6 +66,33 @@ export function ModuleDialog({ open, onClose, moduleId }: ModuleDialogProps) {
 		}
 	};
 
+	const updateModuleStatus = (status: string) => {
+		setLoadingStatus(true);
+		HttpClient.patch<Module>(`/modules/${moduleId}/completion`, {
+			isCompleted: status === "concluido",
+		})
+			.then((res) => setModuleData(res.data))
+			.finally(() => {
+				setLoadingStatus(false);
+				onChangeStatus();
+			});
+	};
+
+	const selectOptions = createListCollection({
+		items: [
+			{ label: "Pendente", value: "pendente" },
+			{ label: "Concluído", value: "concluido" },
+		],
+	});
+
+	const selectColor = useMemo(() => {
+		if (selectedOption === "pendente") {
+			return "blue";
+		} else {
+			return "green";
+		}
+	}, [selectedOption]);
+
 	return (
 		<Dialog.Root
 			open={open}
@@ -56,10 +106,55 @@ export function ModuleDialog({ open, onClose, moduleId }: ModuleDialogProps) {
 			<Dialog.Backdrop />
 			<Dialog.Positioner>
 				<Dialog.Content borderRadius="xl" p={2}>
-					<Dialog.Header fontWeight="bold" fontSize="lg">
-						{moduleData?.title || "Carregando..."}
+					<Dialog.Header justifyContent="space-between">
+						<Text fontWeight="bold" fontSize="lg">
+							{moduleData?.title || "Carregando..."}
+						</Text>
+						<Select.Root
+							size="xs"
+							collection={selectOptions}
+							width="120px"
+							value={[selectedOption]}
+							onValueChange={(e) => {
+								updateModuleStatus(e.value[0]);
+							}}
+							disabled={loadingStatus}
+						>
+							<Select.HiddenSelect />
+							<Select.Control>
+								<Select.Trigger
+									borderColor={selectColor + ".700"}
+									color={selectColor + ".700"}
+									bgColor={selectColor + ".50"}
+								>
+									{loadingStatus ? (
+										<Flex width="100%" justifyContent="center">
+											<Spinner size="xs" />
+										</Flex>
+									) : (
+										<Select.ValueText />
+									)}
+								</Select.Trigger>
+								{!loadingStatus ? (
+									<Select.IndicatorGroup>
+										<Select.Indicator color={selectColor + ".700"} />
+									</Select.IndicatorGroup>
+								) : null}
+							</Select.Control>
+							<Select.Positioner>
+								<Select.Content>
+									{selectOptions.items.map((framework) => (
+										<Select.Item item={framework} key={framework.value}>
+											{framework.label}
+											<Select.ItemIndicator />
+										</Select.Item>
+									))}
+								</Select.Content>
+							</Select.Positioner>
+						</Select.Root>
 					</Dialog.Header>
 					<Dialog.CloseTrigger />
+
 					<Dialog.Body>
 						{loading && (
 							<Box textAlign="center" py={6}>
