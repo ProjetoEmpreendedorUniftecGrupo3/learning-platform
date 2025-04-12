@@ -1,3 +1,4 @@
+import { ChallengeQuestion } from "@/challenge-questions/entities/challenge-question.entity";
 import { ModuleCompletion } from "@/module-completions/entities/module-completion.entity";
 import { ModuleContent } from "@/module-contents/entities/module-content.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -20,4 +21,6 @@ export class CourseModule {
 	contents: ModuleContent[];
 	@OneToMany(() => ModuleCompletion, (moduleCompletion) => moduleCompletion.module)
 	moduleCompletions: ModuleCompletion[];
+	@OneToMany(() => ChallengeQuestion, (question) => question.contentModule)
+	questions: ChallengeQuestion[];
 }

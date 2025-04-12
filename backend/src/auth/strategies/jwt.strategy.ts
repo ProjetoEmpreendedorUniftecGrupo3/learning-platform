@@ -19,11 +19,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
 		const user = await this.usersService.findById(payload.sub);
 
 		if (!user) {
-			throw new UnauthorizedException("Usuário não encontrado");
+			throw new UnauthorizedException("User not found");
 		}
 
 		if (user.email !== payload.email || user.role !== payload.role) {
-			throw new UnauthorizedException("Token inválido");
+			throw new UnauthorizedException("Invalid token");
 		}
 
 		return user;

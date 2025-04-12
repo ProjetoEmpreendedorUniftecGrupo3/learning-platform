@@ -1,5 +1,6 @@
 import { Category } from "@/categories/entities/category.entity";
-import { Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { ChallengeQuestion } from "@/challenge-questions/entities/challenge-question.entity";
+import { Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Challenge {
@@ -8,4 +9,7 @@ export class Challenge {
 
 	@OneToOne(() => Category, (category) => category.challenge)
 	category: Category;
+
+	@OneToMany(() => ChallengeQuestion, (question) => question.challenge)
+	questions: ChallengeQuestion[];
 }

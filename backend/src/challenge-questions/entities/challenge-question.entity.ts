@@ -1,0 +1,24 @@
+import { Challenge } from "@/challenges/entities/challenge.entity";
+import { CourseModule } from "@/modules/entities/module.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { QuestionAlternative } from "./question-alternative.entity";
+
+@Entity()
+export class ChallengeQuestion {
+	@PrimaryGeneratedColumn("uuid")
+	id: string;
+
+	@Column()
+	question: string;
+
+	@ManyToOne(() => CourseModule, { nullable: true })
+	contentModule?: CourseModule;
+
+	@ManyToOne(() => Challenge, (challenge) => challenge.questions)
+	challenge: Challenge;
+
+	@OneToMany(() => QuestionAlternative, (alternative) => alternative.question, {
+		cascade: true,
+	})
+	alternatives: QuestionAlternative[];
+}

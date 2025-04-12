@@ -6,6 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "./auth/auth.module";
 import { CategoriesModule } from "./categories/categories.module";
 import { ChallengeCompletionModule } from "./challenge-completions/challenge-completion.module";
+import { ChallengeQuestionsModule } from "./challenge-questions/challenge-questions.module";
 import { ChallengesModule } from "./challenges/challenges.module";
 import { ModuleCompletionModule } from "./module-completions/module-completion.module";
 import { ModuleContentModule } from "./module-contents/module-contents.module";
@@ -60,6 +61,7 @@ const oneSecond = 1000;
 		ModuleCompletionModule,
 		ModulesModule,
 		ModuleContentModule,
+		ChallengeQuestionsModule,
 	],
 })
 export class AppModule {}

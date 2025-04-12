@@ -34,7 +34,7 @@ export class UsersService {
 		const user = await this.usersRepository.findOneBy({ id: userId });
 
 		if (!user) {
-			throw new NotFoundException("Usuário não encontrado");
+			throw new NotFoundException("User not found");
 		}
 
 		user.password = await bcrypt.hash(newPassword, 10);

@@ -1,6 +1,20 @@
 import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { ValidationError } from "class-validator";
 import { AppModule } from "./app.module";
+
+const mergeCildrenErrors = (errors: ValidationError[]) => {
+	return errors.reduce((acc: string[], curr: ValidationError) => {
+		if (curr.children) {
+			mergeCildrenErrors(curr.children).forEach((childrenError) => {
+				acc.push(curr.property + " " + childrenError);
+			});
+		}
+		acc.push(...Object.values(curr.constraints || {}));
+
+		return acc;
+	}, []);
+};
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -14,7 +28,9 @@ async function bootstrap() {
 				const messages = errors.map((error) => {
 					return {
 						field: error.property,
-						errors: Object.values(error.constraints),
+						errors: error.constraints
+							? Object.values(error.constraints)
+							: mergeCildrenErrors(error.children),
 					};
 				});
 				return new BadRequestException({
