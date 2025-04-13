@@ -1,7 +1,8 @@
+import { CurrentUser } from "@/auth/decorators/current-user.decorator";
 import { Roles } from "@/auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "@/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "@/auth/guards/roles.guard";
-import { UserRole } from "@/users/entities/user.entity";
+import { User, UserRole } from "@/users/entities/user.entity";
 import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { ChallengesService } from "./challenges.service";
 import { ChallengeResponseDto } from "./dto/challenge-response.dto";
@@ -30,11 +31,9 @@ export class ChallengesController {
 	findToRespond(@Param("id") id: string) {
 		return this.challengesService.findToRespond(id);
 	}
-
-	@Get(":id/respond")
-	@UseGuards(JwtAuthGuard)
 	@Post(":id/respond")
-	respond(@Param("id") id: string, @Body() data: ChallengeResponseDto) {
-		return this.challengesService.respond(id, data);
+	@UseGuards(JwtAuthGuard)
+	respond(@Param("id") id: string, @Body() data: ChallengeResponseDto, @CurrentUser() user: User) {
+		return this.challengesService.respond(id, data, user);
 	}
 }

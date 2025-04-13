@@ -1,6 +1,6 @@
 import { Challenge } from "@/challenges/entities/challenge.entity";
 import { User } from "@/users/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class ChallengeCompletion {
@@ -13,6 +13,6 @@ export class ChallengeCompletion {
 	@ManyToOne(() => Challenge)
 	challenge: Challenge;
 
-	@Column({ type: "timestamp" })
+	@CreateDateColumn()
 	completedAt: Date;
 }

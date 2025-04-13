@@ -7,6 +7,7 @@ import { useTrail } from "contexts/UserContext";
 import ScrollContainer from "react-indiana-drag-scroll";
 import "react-indiana-drag-scroll/dist/style.css";
 import { ModuleDialog } from "./components/ModuleModal";
+import { ChallengeDialog } from "./components/ChallengeModal";
 
 const lineColor = "gray";
 
@@ -106,6 +107,7 @@ interface CategoryNodeProps extends Category {
 	index: number;
 	lastCategory: Category | undefined;
 	setSelectedModuleId: (moduleId: string) => void;
+	setSelectedChallengeId: (challengeId: string) => void;
 }
 
 const CategoryNode = ({
@@ -117,6 +119,7 @@ const CategoryNode = ({
 	index,
 	lastCategory,
 	setSelectedModuleId,
+	setSelectedChallengeId,
 }: CategoryNodeProps) => {
 	const lastCategoryHeight =
 		index > 0 && lastCategory
@@ -264,6 +267,12 @@ const CategoryNode = ({
 						bg={challenge.completed ? "green.50" : "white"}
 						borderColor={challenge.completed ? "green.500" : lineColor}
 						boxShadow="sm"
+						cursor={!challenge.completed ? "pointer" : undefined}
+						onClick={() => {
+							if (!challenge.completed) {
+								setSelectedChallengeId(challenge.id);
+							}
+						}}
 					>
 						{challenge.completed ? <LockOpen color="green" /> : <Lock />}
 					</Flex>
@@ -279,7 +288,11 @@ const CategoryNode = ({
 const Tree = ({
 	trail,
 	setSelectedModuleId,
-}: Trail & { setSelectedModuleId: (moduleId: string) => void }) => {
+	setSelectedChallengeId,
+}: Trail & {
+	setSelectedModuleId: (moduleId: string) => void;
+	setSelectedChallengeId: (challengeId: string) => void;
+}) => {
 	return (
 		<Box p={SCREEN_PADDING + "px"} position="relative" width="fit-content">
 			<Flex
@@ -317,6 +330,7 @@ const Tree = ({
 						{...category}
 						lastCategory={trail.categories[index - 1]}
 						setSelectedModuleId={setSelectedModuleId}
+						setSelectedChallengeId={setSelectedChallengeId}
 					/>
 				))}
 			</Box>
@@ -328,8 +342,10 @@ const TrailPage = () => {
 	const { selectedTrailId } = useTrail();
 	const [trailData, setTrailData] = useState<Trail | null>(null);
 	const [loading, setLoading] = useState(false);
-	const [open, setOpen] = useState(false);
+	const [openModule, setOpenModule] = useState(false);
+	const [openChallenge, setOpenChallenge] = useState(false);
 	const [selectedModuleId, setSelectedModuleId] = useState<string | undefined>(undefined);
+	const [selectedChallengeId, setSelectedChallengeId] = useState<string | undefined>(undefined);
 	const [error, setError] = useState<string | null>(null);
 
 	const fetchTrail = async () => {
@@ -354,13 +370,24 @@ const TrailPage = () => {
 
 	useEffect(() => {
 		if (selectedModuleId) {
-			setOpen(true);
+			setOpenModule(true);
 		}
 	}, [selectedModuleId]);
 
-	const onClose = () => {
-		setOpen(false);
+	useEffect(() => {
+		if (selectedChallengeId) {
+			setOpenChallenge(true);
+		}
+	}, [selectedChallengeId]);
+
+	const onCloseModule = () => {
+		setOpenModule(false);
 		setSelectedModuleId(undefined);
+	};
+
+	const onCloseChallenge = () => {
+		setOpenChallenge(false);
+		setSelectedChallengeId(undefined);
 	};
 
 	if (!selectedTrailId) {
@@ -383,14 +410,26 @@ const TrailPage = () => {
 				</Center>
 			) : (
 				<ScrollContainer style={{ width: `calc(100vw - 250px)`, height: "90vh", overflow: "auto" }}>
-					<Tree trail={trailData.trail} setSelectedModuleId={setSelectedModuleId} />
+					<Tree
+						trail={trailData.trail}
+						setSelectedModuleId={setSelectedModuleId}
+						setSelectedChallengeId={setSelectedChallengeId}
+					/>
 				</ScrollContainer>
 			)}
 			<ModuleDialog
-				open={open}
-				onClose={onClose}
+				open={openModule}
+				onClose={onCloseModule}
 				moduleId={selectedModuleId}
 				onChangeStatus={fetchTrail}
+			/>
+
+			<ChallengeDialog
+				open={openChallenge}
+				onClose={onCloseChallenge}
+				challengeId={selectedChallengeId}
+				onChangeStatus={fetchTrail}
+				setSelectedModuleId={setSelectedModuleId}
 			/>
 		</>
 	) : null;

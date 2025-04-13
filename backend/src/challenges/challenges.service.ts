@@ -1,5 +1,6 @@
+import { ChallengeCompletion } from "@/challenge-completions/entities/challenge-completion.entity";
 import { ChallengeQuestion } from "@/challenge-questions/entities/challenge-question.entity";
-import { QuestionAlternative } from "@/challenge-questions/entities/question-alternative.entity";
+import { User } from "@/users/entities/user.entity";
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -14,8 +15,8 @@ export class ChallengesService {
 	constructor(
 		@InjectRepository(Challenge)
 		private challengesRepository: Repository<Challenge>,
-		@InjectRepository(QuestionAlternative)
-		private alternativesRepository: Repository<QuestionAlternative>,
+		@InjectRepository(ChallengeCompletion)
+		private readonly chalengeCompletionRepository: Repository<ChallengeCompletion>,
 		private categoriesService: CategoriesService,
 	) {}
 
@@ -62,7 +63,7 @@ export class ChallengesService {
 		return { id: challenge.id, questions };
 	}
 
-	async respond(id: string, { responses }: ChallengeResponseDto): Promise<ChallengeResponseResultDto> {
+	async respond(id: string, { responses }: ChallengeResponseDto, user: User): Promise<ChallengeResponseResultDto> {
 		const challenge = await this.findOne(id);
 
 		if (responses.length !== challenge.questions.length) {
@@ -89,15 +90,20 @@ export class ChallengesService {
 
 		// Count correct answers and track incorrect ones
 		let correctCount = 0;
-		const incorrectQuestions: ChallengeQuestion[] = [];
+		const studySuggestions: ChallengeQuestion["contentModule"][] = [];
 
 		for (const response of responses) {
 			const correctAltId = correctAnswers[response.id];
 			if (correctAltId === response.response) {
 				correctCount++;
 			} else {
-				if (questionMap[response.id].contentModule) {
-					incorrectQuestions.push(questionMap[response.id]);
+				if (
+					questionMap[response.id].contentModule &&
+					!studySuggestions.some(
+						(studySuggestion) => studySuggestion.id === questionMap[response.id].contentModule.id,
+					)
+				) {
+					studySuggestions.push(questionMap[response.id].contentModule);
 				}
 			}
 		}
@@ -106,7 +112,11 @@ export class ChallengesService {
 		const percentage = (correctCount / challenge.questions.length) * 100;
 
 		if (percentage >= 70) {
-			// TODO: Create challenge completion record
+			const newCompletion = this.chalengeCompletionRepository.create({
+				user,
+				challenge: challenge,
+			});
+			await this.chalengeCompletionRepository.save(newCompletion);
 			return {
 				success: true,
 				message: "Challenge completed successfully!",
@@ -116,7 +126,7 @@ export class ChallengesService {
 			return {
 				success: false,
 				percentage,
-				studySuggestions: incorrectQuestions.map((q) => q.contentModule),
+				studySuggestions,
 			};
 		}
 	}
