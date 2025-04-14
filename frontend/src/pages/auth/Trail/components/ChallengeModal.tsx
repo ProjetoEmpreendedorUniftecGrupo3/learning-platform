@@ -105,7 +105,7 @@ export function ChallengeDialog({
 							</Text>
 						)}
 
-						{!loading && challengeData && !responseResult && (
+						{!loading && challengeData && challengeData.questions.length > 0 && !responseResult && (
 							<>
 								<Text mb={4} fontSize="md">
 									{challengeData.questions[step].question}
