@@ -42,7 +42,7 @@ export class ModulesService {
 			.getOne();
 
 		if (!courseModule) {
-			throw new NotFoundException(`Module with ID ${id} not found`);
+			throw new NotFoundException(`Módulo com ID ${id} não encontrado`);
 		}
 		return {
 			id: courseModule.id,
@@ -64,7 +64,7 @@ export class ModulesService {
 			.getOne();
 
 		if (!courseModule) {
-			throw new NotFoundException("Module not found");
+			throw new NotFoundException("Módulo não encontrado");
 		}
 		const existing = courseModule.moduleCompletions?.filter((mc) => mc.user.id === user.id);
 

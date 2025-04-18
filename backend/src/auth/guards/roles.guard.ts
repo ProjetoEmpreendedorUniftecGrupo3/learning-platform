@@ -17,11 +17,11 @@ export class RolesGuard implements CanActivate {
 		const user = request.user;
 
 		if (!user) {
-			throw new UnauthorizedException("User not authenticated");
+			throw new UnauthorizedException("Usuário não autenticado");
 		}
 
 		if (!requiredRoles.includes(user.role)) {
-			throw new ForbiddenException("Access denied. Insufficient permissions");
+			throw new ForbiddenException("Acesso negado. Permissões insuficientes");
 		}
 
 		return true;

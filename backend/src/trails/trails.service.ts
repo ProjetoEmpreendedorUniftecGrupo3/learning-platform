@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -19,7 +19,11 @@ export class TrailsService {
 		private challengeCompletionsRepository: Repository<ChallengeCompletion>,
 	) {}
 
-	create(createTrailDto: CreateTrailDto) {
+	async create(createTrailDto: CreateTrailDto) {
+		const sameNameTrail = await this.trailsRepository.exists({ where: { name: createTrailDto.name.trim() } });
+		if (sameNameTrail) {
+			throw new ConflictException("Já existe uma trilha com o mesmo nome");
+		}
 		const trail = this.trailsRepository.create(createTrailDto);
 		return this.trailsRepository.save(trail);
 	}
@@ -30,7 +34,7 @@ export class TrailsService {
 		});
 
 		if (!trail) {
-			throw new NotFoundException(`Trail with ID ${id} not found`);
+			throw new NotFoundException(`Trilha com ID ${id} não encontrada`);
 		}
 
 		return trail;
@@ -59,7 +63,7 @@ export class TrailsService {
 		});
 
 		if (!trail) {
-			throw new NotFoundException(`Trail with ID ${trailId} not found`);
+			throw new NotFoundException(`Trilha com ID ${trailId} não encontrada`);
 		}
 
 		let hasIncompletedChallenge = false;

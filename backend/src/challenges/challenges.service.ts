@@ -33,7 +33,7 @@ export class ChallengesService {
 		});
 
 		if (!challenge) {
-			throw new NotFoundException(`Challenge with ID ${id} not found`);
+			throw new NotFoundException(`Desafio com ID ${id} não encontrado`);
 		}
 
 		return challenge;
@@ -67,14 +67,14 @@ export class ChallengesService {
 		const challenge = await this.findOne(id);
 
 		if (responses.length !== challenge.questions.length) {
-			throw new BadRequestException("Number of responses does not match number of questions");
+			throw new BadRequestException("O número de respostas não corresponde ao número de questões");
 		}
 
 		if (
 			responses.some((r) => !challenge.questions.some((q) => q.id === r.id)) ||
 			challenge.questions.some((q) => !responses.some((r) => q.id === r.id))
 		) {
-			throw new BadRequestException("Some invalid question id");
+			throw new BadRequestException("Algum ID de questão é inválido");
 		}
 
 		// Create an object to store correct answers
@@ -119,7 +119,7 @@ export class ChallengesService {
 			await this.chalengeCompletionRepository.save(newCompletion);
 			return {
 				success: true,
-				message: "Challenge completed successfully!",
+				message: "Desafio concluído com sucesso!",
 				percentage,
 			};
 		} else {
