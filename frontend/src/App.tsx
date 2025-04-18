@@ -17,7 +17,7 @@ import { toaster, Toaster } from "components/ui/toaster";
 import RegisterPage from "pages/public/Register";
 import RecoverPasswordPage from "pages/public/RecoverPassword";
 import ResetPasswordPage from "pages/public/ResetPassword";
-import { TrailProvider } from "contexts/UserContext";
+import { TrailProvider } from "contexts/TrailContext";
 
 export default function App() {
 	useEffect(() => {

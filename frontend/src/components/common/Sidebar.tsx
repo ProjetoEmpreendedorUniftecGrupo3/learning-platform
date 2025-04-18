@@ -1,6 +1,6 @@
 import { Box, Flex, Text, Button, Skeleton } from "@chakra-ui/react";
 import { useAuth } from "contexts/AuthContext";
-import { useTrail } from "contexts/UserContext";
+import { useTrail } from "contexts/TrailContext";
 import { HttpClient } from "lib/httpClient";
 import { useEffect, useState } from "react";
 

@@ -3,7 +3,7 @@ import { Category, CategoryModule, Trail } from "types/trail";
 import { LockOpen, Lock, Check } from "lucide-react";
 import { HttpClient } from "lib/httpClient";
 import { useEffect, useState } from "react";
-import { useTrail } from "contexts/UserContext";
+import { useTrail } from "contexts/TrailContext";
 import ScrollContainer from "react-indiana-drag-scroll";
 import "react-indiana-drag-scroll/dist/style.css";
 import { ModuleDialog } from "./components/ModuleModal";
