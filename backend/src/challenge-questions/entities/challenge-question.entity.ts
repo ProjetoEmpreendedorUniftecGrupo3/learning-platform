@@ -11,10 +11,10 @@ export class ChallengeQuestion {
 	@Column()
 	question: string;
 
-	@ManyToOne(() => CourseModule, { nullable: true })
+	@ManyToOne(() => CourseModule, { nullable: true, onDelete: "CASCADE" })
 	contentModule?: CourseModule;
 
-	@ManyToOne(() => Challenge, (challenge) => challenge.questions)
+	@ManyToOne(() => Challenge, (challenge) => challenge.questions, { onDelete: "CASCADE" })
 	challenge: Challenge;
 
 	@OneToMany(() => QuestionAlternative, (alternative) => alternative.question, {

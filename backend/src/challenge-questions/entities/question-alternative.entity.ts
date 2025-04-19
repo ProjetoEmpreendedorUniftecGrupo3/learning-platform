@@ -12,6 +12,6 @@ export class QuestionAlternative {
 	@Column()
 	isCorrect: boolean;
 
-	@ManyToOne(() => ChallengeQuestion, (question) => question.alternatives)
+	@ManyToOne(() => ChallengeQuestion, (question) => question.alternatives, { onDelete: "CASCADE" })
 	question: ChallengeQuestion;
 }

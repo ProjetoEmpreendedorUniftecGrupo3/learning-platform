@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const login = async ({ email, password }: { email: string; password: string }) => {
 		try {
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	const logout = () => {
 		setUser(null);
-		localStorage.removeItem("authToken");
+		localStorage.clear();
 	};
 
 	const hasRole = (requiredRole: "user" | "admin") => {
@@ -52,10 +52,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				} catch (e) {
 					console.log("AUTH ERROR: ", e);
 					logout();
-				} finally {
-					setIsLoading(false);
 				}
 			}
+			setIsLoading(false);
 		};
 
 		initializeAuth();
@@ -68,4 +67,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	);
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

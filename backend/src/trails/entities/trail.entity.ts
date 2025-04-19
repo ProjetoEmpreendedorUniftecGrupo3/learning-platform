@@ -9,6 +9,8 @@ export class Trail {
 	@Column()
 	name: string;
 
-	@OneToMany(() => Category, (category) => category.trail)
+	@OneToMany(() => Category, (category) => category.trail, {
+		cascade: true,
+	})
 	categories: Category[];
 }

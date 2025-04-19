@@ -7,10 +7,10 @@ export class ModuleCompletion {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@ManyToOne(() => User)
+	@ManyToOne(() => User, { onDelete: "CASCADE" })
 	user: User;
 
-	@ManyToOne(() => CourseModule)
+	@ManyToOne(() => CourseModule, { onDelete: "CASCADE" })
 	module: CourseModule;
 
 	@CreateDateColumn()

@@ -7,7 +7,7 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import UserLayout from "layouts/UserLayout";
 import TrailPage from "pages/auth/Trail";
 import { AdminLayout } from "layouts/AdminLayout";
-import { AdminDashboardPage } from "pages/admin/Dashboard";
+import { AdminTrailsPage } from "pages/admin/Trails";
 import LoginPage from "pages/public/Login";
 import { ProtectedRoute } from "common/ProtectedRoute";
 import { PublicOnlyRoute } from "common/PublicOnlyRoute";
@@ -18,6 +18,7 @@ import RegisterPage from "pages/public/Register";
 import RecoverPasswordPage from "pages/public/RecoverPassword";
 import ResetPasswordPage from "pages/public/ResetPassword";
 import { TrailProvider } from "contexts/TrailContext";
+import { TrailForm } from "pages/admin/TrailForm";
 
 export default function App() {
 	useEffect(() => {
@@ -50,18 +51,23 @@ export default function App() {
 							{/* Rotas de Usuário */}
 							<Route element={<ProtectedRoute requiredRole="user" />}>
 								<Route element={<UserLayout />}>
-									<Route path="/user/trails" element={<TrailPage />} />
+									<Route path="/user/trail" element={<TrailPage />} />
 								</Route>
 							</Route>
 
 							{/* Rotas de Admin */}
 							<Route element={<ProtectedRoute requiredRole="admin" />}>
 								<Route element={<AdminLayout />}>
-									<Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+									<Route path="/admin/trails" element={<AdminTrailsPage />} />
+									<Route path="/admin/trails/create" element={<TrailForm />} />
+									<Route path="/admin/trails/edit/:id" element={<TrailForm />} />
+									{/* <Route path="/admin/users" element={<AdminDashboardPage />} /> */}
 								</Route>
 							</Route>
 
 							{/* Redirecionamentos */}
+							<Route path="/admin" element={<Navigate to="/admin/trails" replace />} />
+							<Route path="/user" element={<Navigate to="/user/trail" replace />} />
 							<Route path="*" element={<Navigate to="/login" />} />
 						</Routes>
 					</BrowserRouter>

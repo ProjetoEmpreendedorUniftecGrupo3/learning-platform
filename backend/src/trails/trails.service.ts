@@ -1,11 +1,12 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 
 import { ChallengeCompletion } from "@/challenge-completions/entities/challenge-completion.entity";
 import { ModuleCompletion } from "@/module-completions/entities/module-completion.entity";
 import { CreateTrailDto } from "./dto/create-trail.dto";
 import { TrailResponseDto } from "./dto/trail-response.dto";
+import { UpdateTrailDto } from "./dto/update-trail.dto";
 import { Trail } from "./entities/trail.entity";
 
 @Injectable()
@@ -24,13 +25,19 @@ export class TrailsService {
 		if (sameNameTrail) {
 			throw new ConflictException("Já existe uma trilha com o mesmo nome");
 		}
-		const trail = this.trailsRepository.create(createTrailDto);
+		const trail = this.trailsRepository.create({ name: createTrailDto.name.trim() });
 		return this.trailsRepository.save(trail);
 	}
 
 	async findOne(id: string): Promise<Trail> {
 		const trail = await this.trailsRepository.findOne({
 			where: { id },
+			relations: {
+				categories: {
+					modules: true,
+					challenge: true,
+				},
+			},
 		});
 
 		if (!trail) {
@@ -41,9 +48,40 @@ export class TrailsService {
 	}
 
 	async findAll(): Promise<Trail[]> {
-		const trails = await this.trailsRepository.find();
+		return this.trailsRepository.find({
+			relations: {
+				categories: true,
+			},
+			order: {
+				name: "ASC",
+			},
+		});
+	}
 
-		return trails;
+	async update(id: string, updateTrailDto: UpdateTrailDto): Promise<Trail> {
+		const trail = await this.findOne(id);
+
+		if (updateTrailDto.name) {
+			const sameNameTrail = await this.trailsRepository.exists({
+				where: {
+					name: updateTrailDto.name.trim(),
+					id: Not(id),
+				},
+			});
+
+			if (sameNameTrail) {
+				throw new ConflictException("Já existe uma trilha com o mesmo nome");
+			}
+
+			trail.name = updateTrailDto.name.trim();
+		}
+
+		return this.trailsRepository.save(trail);
+	}
+
+	async remove(id: string): Promise<void> {
+		const trail = await this.findOne(id);
+		await this.trailsRepository.remove(trail);
 	}
 
 	async getTrailWithProgress(userId: string, trailId: string): Promise<TrailResponseDto> {

@@ -7,8 +7,7 @@ export const PublicOnlyRoute = () => {
 
 	if (isLoading) return <div>Carregando...</div>;
 
-	if (user)
-		return <Navigate to={user.role === "admin" ? "/admin/dashboard" : "/user/trails"} replace />;
+	if (user) return <Navigate to={user.role === "admin" ? "/admin" : "/user"} replace />;
 
 	return <Outlet />;
 };

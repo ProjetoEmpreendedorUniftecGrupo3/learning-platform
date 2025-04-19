@@ -15,12 +15,18 @@ export class CourseModule {
 	@Column()
 	description: string;
 
-	@ManyToOne(() => Category, (category) => category.modules)
+	@ManyToOne(() => Category, (category) => category.modules, { onDelete: "CASCADE" })
 	category: Category;
-	@OneToMany(() => ModuleContent, (moduleContent) => moduleContent.courseModule)
+	@OneToMany(() => ModuleContent, (moduleContent) => moduleContent.courseModule, {
+		cascade: true,
+	})
 	contents: ModuleContent[];
-	@OneToMany(() => ModuleCompletion, (moduleCompletion) => moduleCompletion.module)
+	@OneToMany(() => ModuleCompletion, (moduleCompletion) => moduleCompletion.module, {
+		cascade: true,
+	})
 	moduleCompletions: ModuleCompletion[];
-	@OneToMany(() => ChallengeQuestion, (question) => question.contentModule)
+	@OneToMany(() => ChallengeQuestion, (question) => question.contentModule, {
+		cascade: true,
+	})
 	questions: ChallengeQuestion[];
 }

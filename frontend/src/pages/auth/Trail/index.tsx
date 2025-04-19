@@ -353,7 +353,7 @@ const TrailPage = () => {
 			setLoading(true);
 			setError(null);
 			try {
-				const response = await HttpClient.get<Trail>(`/trails/${selectedTrailId}`);
+				const response = await HttpClient.get<Trail>(`/trails/progress/${selectedTrailId}`);
 				setTrailData(response.data);
 			} catch (error) {
 				console.error("Erro ao buscar trilha:", error);

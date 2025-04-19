@@ -9,7 +9,7 @@ export class Category {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@ManyToOne(() => Trail, (trail) => trail.categories)
+	@ManyToOne(() => Trail, (trail) => trail.categories, { onDelete: "CASCADE" })
 	trail: Trail;
 
 	@Column()
@@ -18,7 +18,9 @@ export class Category {
 	@Column()
 	order: number;
 
-	@OneToMany(() => CourseModule, (module) => module.category)
+	@OneToMany(() => CourseModule, (module) => module.category, {
+		cascade: true,
+	})
 	modules: CourseModule[];
 
 	@OneToOne(() => Challenge, (challenge) => challenge.category)

@@ -34,7 +34,9 @@ export class User {
 	@Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
 	createdAt: Date;
 
-	@OneToMany(() => ModuleCompletion, (moduleCompletion) => moduleCompletion.user)
+	@OneToMany(() => ModuleCompletion, (moduleCompletion) => moduleCompletion.user, {
+		cascade: true,
+	})
 	moduleCompletions: ModuleCompletion[];
 
 	@BeforeInsert()

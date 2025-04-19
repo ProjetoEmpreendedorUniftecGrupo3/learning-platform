@@ -10,6 +10,8 @@ export class Challenge {
 	@OneToOne(() => Category, (category) => category.challenge)
 	category: Category;
 
-	@OneToMany(() => ChallengeQuestion, (question) => question.challenge)
+	@OneToMany(() => ChallengeQuestion, (question) => question.challenge, {
+		cascade: true,
+	})
 	questions: ChallengeQuestion[];
 }

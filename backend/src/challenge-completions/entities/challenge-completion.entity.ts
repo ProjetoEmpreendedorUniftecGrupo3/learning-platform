@@ -7,10 +7,10 @@ export class ChallengeCompletion {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@ManyToOne(() => User)
+	@ManyToOne(() => User, { onDelete: "CASCADE" })
 	user: User;
 
-	@ManyToOne(() => Challenge)
+	@ManyToOne(() => Challenge, { onDelete: "CASCADE" })
 	challenge: Challenge;
 
 	@CreateDateColumn()

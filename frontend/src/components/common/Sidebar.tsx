@@ -58,7 +58,7 @@ export const Sidebar = () => {
 						variant={selectedTrailId === trail.id ? "solid" : "ghost"}
 						onClick={() => setSelectedTrailId(trail.id)}
 					>
-						{trail.name}
+						<Text truncate>{trail.name}</Text>
 					</Button>
 				))
 			) : (
