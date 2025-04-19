@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.5.2",
+    "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
     "@chakra-ui/react": "^3.13.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",

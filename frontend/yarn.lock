@@ -68,6 +68,23 @@
     "@zag-js/tree-view" "0.82.2"
     "@zag-js/types" "0.82.2"
 
+"@atlaskit/pragmatic-drag-and-drop-hitbox@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@atlaskit/pragmatic-drag-and-drop-hitbox/-/pragmatic-drag-and-drop-hitbox-1.0.3.tgz#fcce42f5e2c5a26007f4422397acad29608d3784"
+  integrity sha512-/Sbu/HqN2VGLYBhnsG7SbRNg98XKkbF6L7XDdBi+izRybfaK1FeMfodPpm/xnBHPJzwYMdkE0qtLyv6afhgMUA==
+  dependencies:
+    "@atlaskit/pragmatic-drag-and-drop" "^1.1.0"
+    "@babel/runtime" "^7.0.0"
+
+"@atlaskit/pragmatic-drag-and-drop@^1.1.0", "@atlaskit/pragmatic-drag-and-drop@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@atlaskit/pragmatic-drag-and-drop/-/pragmatic-drag-and-drop-1.5.2.tgz#a7afaff05f925b651efa0322d13032ab9e7c267d"
+  integrity sha512-fDuTwlDD11r3ev5tLJ6JnzQUiG9v77c8zGcNdO7RRNtZZbOHam8CFhmyFGY4E/mLjvgYng0UkcyCrSBc4FXYZw==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    bind-event-listener "^3.0.0"
+    raf-schd "^4.0.3"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.26.2":
   version "7.26.2"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.26.2.tgz#4b5fab97d33338eff916235055f0ebc21e573a85"
@@ -190,6 +207,13 @@
   integrity sha512-+iqjT8xmXhhYv4/uiYd8FNQsraMFZIfxVSqxxVSZP0WbbSAWvBXAul0m/zu+7Vv4O/3WtApy9pmaTMiumEZgfg==
   dependencies:
     "@babel/helper-plugin-utils" "^7.25.9"
+
+"@babel/runtime@^7.0.0":
+  version "7.27.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.27.0.tgz#fbee7cf97c709518ecc1f590984481d5460d4762"
+  integrity sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==
+  dependencies:
+    regenerator-runtime "^0.14.0"
 
 "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3":
   version "7.26.10"
@@ -1734,6 +1758,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+bind-event-listener@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/bind-event-listener/-/bind-event-listener-3.0.0.tgz#c90f9a7fcb65cac21045f810c20ef7e647a74921"
+  integrity sha512-PJvH288AWQhKs2v9zyfYdPzlPqf5bXbGMmhmUIY9x4dAUGIWgomO771oBQNwJnMQSnUIXhKu6sgzpBRXTlvb8Q==
+
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -3172,6 +3201,11 @@ queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
+
+raf-schd@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/raf-schd/-/raf-schd-4.0.3.tgz#5d6c34ef46f8b2a0e880a8fcdb743efc5bfdbc1a"
+  integrity sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==
 
 react-dom@^19.0.0:
   version "19.0.0"

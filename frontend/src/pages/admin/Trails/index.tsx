@@ -8,6 +8,7 @@ import {
 	Dialog,
 	CloseButton,
 	Flex,
+	EmptyState,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -81,38 +82,52 @@ export const AdminTrailsPage = () => {
 					Criar nova trilha
 				</Button>
 			</HStack>
-
-			<Table.ScrollArea>
-				<Table.Root variant="outline">
-					<Table.Header>
-						<Table.Row>
-							<Table.ColumnHeader>Nome</Table.ColumnHeader>
-							<Table.ColumnHeader textAlign="end">Ações</Table.ColumnHeader>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{trails.map((trail) => (
-							<Table.Row key={trail.id}>
-								<Table.Cell>{trail.name}</Table.Cell>
-								<Table.Cell>
-									<Flex gap={2} justifyContent="flex-end">
-										<Button
-											size="sm"
-											colorPalette="blue"
-											onClick={() => navigate(`/admin/trails/edit/${trail.id}`)}
-										>
-											Editar
-										</Button>
-										<Button size="sm" colorPalette="red" onClick={() => openDeleteDialog(trail.id)}>
-											Excluir
-										</Button>
-									</Flex>
-								</Table.Cell>
+			{!trails.length ? (
+				<EmptyState.Root>
+					<EmptyState.Content>
+						<VStack textAlign="center">
+							<EmptyState.Title>Não há trilhas aqui</EmptyState.Title>
+							<EmptyState.Description>Começe criando uma nova trilha</EmptyState.Description>
+						</VStack>
+					</EmptyState.Content>
+				</EmptyState.Root>
+			) : (
+				<Table.ScrollArea>
+					<Table.Root variant="outline">
+						<Table.Header>
+							<Table.Row>
+								<Table.ColumnHeader>Nome</Table.ColumnHeader>
+								<Table.ColumnHeader textAlign="end">Ações</Table.ColumnHeader>
 							</Table.Row>
-						))}
-					</Table.Body>
-				</Table.Root>
-			</Table.ScrollArea>
+						</Table.Header>
+						<Table.Body>
+							{trails.map((trail) => (
+								<Table.Row key={trail.id}>
+									<Table.Cell>{trail.name}</Table.Cell>
+									<Table.Cell>
+										<Flex gap={2} justifyContent="flex-end">
+											<Button
+												size="sm"
+												colorPalette="blue"
+												onClick={() => navigate(`/admin/trails/edit/${trail.id}`)}
+											>
+												Editar
+											</Button>
+											<Button
+												size="sm"
+												colorPalette="red"
+												onClick={() => openDeleteDialog(trail.id)}
+											>
+												Excluir
+											</Button>
+										</Flex>
+									</Table.Cell>
+								</Table.Row>
+							))}
+						</Table.Body>
+					</Table.Root>
+				</Table.ScrollArea>
+			)}
 
 			<Dialog.Root
 				open={openDelete}

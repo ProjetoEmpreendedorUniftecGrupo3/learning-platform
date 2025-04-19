@@ -1,4 +1,4 @@
-import { VStack, Text, Spinner, Button, Input, Field } from "@chakra-ui/react";
+import { VStack, Text, Spinner, Button, Input, Field, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { HttpClient } from "lib/httpClient";
@@ -101,9 +101,14 @@ export const TrailForm = () => {
 						{errors.name && <Field.ErrorText>{errors.name}</Field.ErrorText>}
 					</Field.Root>
 
-					<Button type="submit" colorScheme="green" loading={submitting}>
-						{id ? "Atualizar" : "Criar"}
-					</Button>
+					<Flex gap="24px">
+						<Button variant="subtle" onClick={() => navigate("/admin/trails")} flex={1}>
+							Cancelar
+						</Button>
+						<Button type="submit" colorScheme="green" loading={submitting} flex={1}>
+							{id ? "Atualizar" : "Criar"}
+						</Button>
+					</Flex>
 				</VStack>
 			</form>
 		</VStack>

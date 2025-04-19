@@ -19,6 +19,8 @@ import RecoverPasswordPage from "pages/public/RecoverPassword";
 import ResetPasswordPage from "pages/public/ResetPassword";
 import { TrailProvider } from "contexts/TrailContext";
 import { TrailForm } from "pages/admin/TrailForm";
+import { AdminCategoriesPage } from "pages/admin/Categories";
+import { CategoryForm } from "pages/admin/CategoryForm";
 
 export default function App() {
 	useEffect(() => {
@@ -61,7 +63,9 @@ export default function App() {
 									<Route path="/admin/trails" element={<AdminTrailsPage />} />
 									<Route path="/admin/trails/create" element={<TrailForm />} />
 									<Route path="/admin/trails/edit/:id" element={<TrailForm />} />
-									{/* <Route path="/admin/users" element={<AdminDashboardPage />} /> */}
+									<Route path="/admin/categories" element={<AdminCategoriesPage />} />
+									<Route path="/admin/categories/create" element={<CategoryForm />} />
+									<Route path="/admin/categories/edit/:id" element={<CategoryForm />} />
 								</Route>
 							</Route>
 
