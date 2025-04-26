@@ -5,4 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [react(), tsconfigPaths()],
+	preview: {
+		allowedHosts: ["learning-frontend-a3e534e7a3d4.herokuapp.com"],
+	},
 });
