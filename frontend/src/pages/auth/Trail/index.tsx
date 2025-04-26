@@ -270,7 +270,7 @@ const CategoryNode = ({
 						boxShadow="sm"
 						cursor={!challenge.completed ? "pointer" : undefined}
 						onClick={() => {
-							if (!challenge.completed) {
+							if (!challenge.completed && !blocked) {
 								setSelectedChallengeId(challenge.id);
 							}
 						}}
