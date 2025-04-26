@@ -257,6 +257,7 @@ const CategoryNode = ({
 					gap={CHALLENGE_CONTAINER_GAP + "px"}
 				>
 					<Flex
+						position="relative"
 						backgroundColor="white"
 						height={CHALLENGE_SIZE + "px"}
 						width={CHALLENGE_SIZE + "px"}
@@ -287,6 +288,7 @@ const CategoryNode = ({
 								display="flex"
 								alignItems="center"
 								justifyContent="center"
+								zIndex={1000}
 							>
 								<Lock color="white" />
 							</Box>
