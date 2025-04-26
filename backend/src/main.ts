@@ -41,11 +41,11 @@ async function bootstrap() {
 			},
 		}),
 	);
-	console.log("DB_HOST: ", process.env.DB_HOST);
+
 	app.enableCors({
 		origin: "*",
 	});
 
-	await app.listen(3000);
+	await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
