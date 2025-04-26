@@ -37,9 +37,12 @@ const oneSecond = 1000;
 					// Habilita UUID no PostgreSQL
 					extension: "uuid-ossp",
 				},
-				ssl: {
-					rejectUnauthorized: false,
-				},
+				ssl:
+					configService.get<string>("NODE_ENV") !== "development"
+						? {
+								rejectUnauthorized: false,
+							}
+						: undefined,
 				synchronize: true,
 			}),
 			inject: [ConfigService],
