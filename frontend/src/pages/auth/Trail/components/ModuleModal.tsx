@@ -37,7 +37,7 @@ export function ModuleDialog({ open, onClose, moduleId, onChangeStatus }: Module
 		setError("");
 		setModuleData(null);
 
-		HttpClient.get<Module>(`/modules/${moduleId}`)
+		HttpClient.get<Module>(`/modules/${moduleId}/trail-data`)
 			.then((res) => setModuleData(res.data))
 			.catch(() => setError("Erro ao carregar os dados do módulo."))
 			.finally(() => setLoading(false));

@@ -5,7 +5,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CategoriesService } from "../categories/categories.service";
 import { CreateModuleDto } from "./dto/create-module.dto";
+import { FindAllModulesDto } from "./dto/find-all-modules.dto";
 import { UpdateModuleCompletionDto } from "./dto/update-module-completion.dto";
+import { UpdateModuleDto } from "./dto/update-module.dto";
 import { CourseModule } from "./entities/module.entity";
 
 @Injectable()
@@ -20,6 +22,11 @@ export class ModulesService {
 
 	async create(createModuleDto: CreateModuleDto): Promise<CourseModule> {
 		const category = await this.categoriesService.findOne(createModuleDto.categoryId);
+
+		if (!category) {
+			throw new NotFoundException(`Categoria com ID ${createModuleDto.categoryId} não encontrada`);
+		}
+
 		const module = this.modulesRepository.create({
 			title: createModuleDto.title,
 			description: createModuleDto.description,
@@ -28,7 +35,37 @@ export class ModulesService {
 		return this.modulesRepository.save(module);
 	}
 
-	async findOne(
+	async update(id: string, updateModuleDto: UpdateModuleDto): Promise<CourseModule> {
+		const courseModule = await this.modulesRepository.findOne({ where: { id } });
+
+		if (!courseModule) {
+			throw new NotFoundException(`Módulo com ID ${id} não encontrado`);
+		}
+
+		if (updateModuleDto.title) {
+			courseModule.title = updateModuleDto.title;
+		}
+
+		if (updateModuleDto.description) {
+			courseModule.description = updateModuleDto.description;
+		}
+
+		if (updateModuleDto.categoryId) {
+			const category = await this.categoriesService.findOne(updateModuleDto.categoryId);
+
+			if (!category) {
+				throw new NotFoundException(`Categoria com ID ${updateModuleDto.categoryId} não encontrada`);
+			}
+
+			courseModule.category = category;
+		}
+
+		const updatedModule = await this.modulesRepository.save(courseModule);
+
+		return this.findOne(updatedModule.id);
+	}
+
+	async findToUserTrail(
 		id: string,
 		user: User,
 	): Promise<Pick<CourseModule, "id" | "title" | "description" | "contents"> & { completed: boolean }> {
@@ -51,6 +88,40 @@ export class ModulesService {
 			contents: courseModule.contents,
 			completed: courseModule.moduleCompletions.length > 0,
 		};
+	}
+
+	async findOne(id: string): Promise<CourseModule> {
+		const courseModule = await this.modulesRepository.findOne({
+			where: { id },
+			relations: {
+				category: true,
+				contents: true,
+			},
+		});
+
+		if (!courseModule) {
+			throw new NotFoundException(`Módulo com ID ${id} não encontrado`);
+		}
+
+		return courseModule;
+	}
+
+	async findAll(query?: FindAllModulesDto): Promise<CourseModule[]> {
+		const where = query?.categoryId ? { category: { id: query.categoryId } } : {};
+		return this.modulesRepository.find({
+			where,
+			relations: {
+				category: true,
+			},
+			order: {
+				title: "ASC",
+			},
+		});
+	}
+
+	async remove(id: string): Promise<void> {
+		const courseModule = await this.findOne(id);
+		await this.modulesRepository.remove(courseModule);
 	}
 
 	async updateCompletion(courseModuleId: string, updateDto: UpdateModuleCompletionDto, user: User) {
@@ -82,6 +153,6 @@ export class ModulesService {
 			}
 		}
 
-		return await this.findOne(courseModuleId, user);
+		return await this.findToUserTrail(courseModuleId, user);
 	}
 }
