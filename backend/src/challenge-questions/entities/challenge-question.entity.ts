@@ -11,7 +11,7 @@ export class ChallengeQuestion {
 	@Column()
 	question: string;
 
-	@ManyToOne(() => CourseModule, { nullable: true, onDelete: "CASCADE" })
+	@ManyToOne(() => CourseModule, { nullable: true, onDelete: "SET NULL" })
 	courseModule?: CourseModule;
 
 	@ManyToOne(() => Challenge, (challenge) => challenge.questions, { onDelete: "CASCADE" })
