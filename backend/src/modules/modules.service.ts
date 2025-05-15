@@ -1,3 +1,4 @@
+import { ChallengeQuestion } from "@/challenge-questions/entities/challenge-question.entity";
 import { ModuleCompletion } from "@/module-completions/entities/module-completion.entity";
 import { User } from "@/users/entities/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
@@ -17,6 +18,8 @@ export class ModulesService {
 		private modulesRepository: Repository<CourseModule>,
 		@InjectRepository(ModuleCompletion)
 		private readonly moduleCompletionRepository: Repository<ModuleCompletion>,
+		@InjectRepository(ChallengeQuestion)
+		private readonly challengeQuestionRepository: Repository<ChallengeQuestion>,
 		private categoriesService: CategoriesService,
 	) {}
 
@@ -36,7 +39,7 @@ export class ModulesService {
 	}
 
 	async update(id: string, updateModuleDto: UpdateModuleDto): Promise<CourseModule> {
-		const courseModule = await this.modulesRepository.findOne({ where: { id } });
+		const courseModule = await this.modulesRepository.findOne({ where: { id }, relations: { category: true } });
 
 		if (!courseModule) {
 			throw new NotFoundException(`Módulo com ID ${id} não encontrado`);
@@ -50,6 +53,8 @@ export class ModulesService {
 			courseModule.description = updateModuleDto.description;
 		}
 
+		const oldCategoryId = courseModule.category.id;
+
 		if (updateModuleDto.categoryId) {
 			const category = await this.categoriesService.findOne(updateModuleDto.categoryId);
 
@@ -58,6 +63,19 @@ export class ModulesService {
 			}
 
 			courseModule.category = category;
+
+			if (oldCategoryId && oldCategoryId !== updateModuleDto.categoryId) {
+				const questions = await this.challengeQuestionRepository.find({
+					where: { courseModule: { id } },
+				});
+
+				if (questions.length > 0) {
+					for (const question of questions) {
+						question.courseModule = null;
+					}
+					await this.challengeQuestionRepository.save(questions);
+				}
+			}
 		}
 
 		const updatedModule = await this.modulesRepository.save(courseModule);
