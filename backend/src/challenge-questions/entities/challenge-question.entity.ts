@@ -12,7 +12,7 @@ export class ChallengeQuestion {
 	question: string;
 
 	@ManyToOne(() => CourseModule, { nullable: true, onDelete: "CASCADE" })
-	contentModule?: CourseModule;
+	courseModule?: CourseModule;
 
 	@ManyToOne(() => Challenge, (challenge) => challenge.questions, { onDelete: "CASCADE" })
 	challenge: Challenge;

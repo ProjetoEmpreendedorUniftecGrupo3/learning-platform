@@ -29,7 +29,7 @@ export class ChallengesService {
 	async findOne(id: string): Promise<Challenge> {
 		const challenge = await this.challengesRepository.findOne({
 			where: { id },
-			relations: ["questions", "questions.alternatives", "questions.contentModule"],
+			relations: ["questions", "questions.alternatives", "questions.courseModule"],
 		});
 
 		if (!challenge) {
@@ -90,7 +90,7 @@ export class ChallengesService {
 
 		// Count correct answers and track incorrect ones
 		let correctCount = 0;
-		const studySuggestions: ChallengeQuestion["contentModule"][] = [];
+		const studySuggestions: ChallengeQuestion["courseModule"][] = [];
 
 		for (const response of responses) {
 			const correctAltId = correctAnswers[response.id];
@@ -98,12 +98,12 @@ export class ChallengesService {
 				correctCount++;
 			} else {
 				if (
-					questionMap[response.id].contentModule &&
+					questionMap[response.id].courseModule &&
 					!studySuggestions.some(
-						(studySuggestion) => studySuggestion.id === questionMap[response.id].contentModule.id,
+						(studySuggestion) => studySuggestion.id === questionMap[response.id].courseModule.id,
 					)
 				) {
-					studySuggestions.push(questionMap[response.id].contentModule);
+					studySuggestions.push(questionMap[response.id].courseModule);
 				}
 			}
 		}

@@ -27,17 +27,17 @@ export class ChallengeQuestionsService {
 			throw new NotFoundException(`Challenge with ID ${createQuestionDto.challengeId} not found`);
 		}
 
-		let contentModule: CourseModule | undefined = undefined;
-		if (createQuestionDto.contentModuleId) {
-			contentModule = await this.moduleRepository.findOne({
-				where: { id: createQuestionDto.contentModuleId },
+		let courseModule: CourseModule | undefined = undefined;
+		if (createQuestionDto.courseModuleId) {
+			courseModule = await this.moduleRepository.findOne({
+				where: { id: createQuestionDto.courseModuleId },
 				relations: ["category"],
 			});
-			if (!contentModule) {
-				throw new NotFoundException(`Course module with ID ${createQuestionDto.contentModuleId} not found`);
+			if (!courseModule) {
+				throw new NotFoundException(`Course module with ID ${createQuestionDto.courseModuleId} not found`);
 			}
 
-			if (contentModule.category.id !== challenge.category.id) {
+			if (courseModule.category.id !== challenge.category.id) {
 				throw new BadRequestException("O conteúdo deve ser da mesma categoria do desafio");
 			}
 		}
@@ -50,7 +50,7 @@ export class ChallengeQuestionsService {
 		const question = this.questionRepository.create({
 			...createQuestionDto,
 			challenge,
-			contentModule,
+			courseModule,
 		});
 
 		return this.questionRepository.save(question);
@@ -59,7 +59,7 @@ export class ChallengeQuestionsService {
 	async findOne(id: string) {
 		const question = await this.questionRepository.findOne({
 			where: { id },
-			relations: ["alternatives", "contentModule"],
+			relations: ["alternatives", "courseModule"],
 		});
 
 		if (!question) {
@@ -82,14 +82,14 @@ export class ChallengeQuestionsService {
 			question.challenge = challenge;
 		}
 
-		if (updateQuestionDto.contentModuleId) {
-			const contentModule = await this.moduleRepository.findOne({
-				where: { id: updateQuestionDto.contentModuleId },
+		if (updateQuestionDto.courseModuleId) {
+			const courseModule = await this.moduleRepository.findOne({
+				where: { id: updateQuestionDto.courseModuleId },
 			});
-			if (!contentModule) {
-				throw new NotFoundException(`Course module with ID ${updateQuestionDto.contentModuleId} not found`);
+			if (!courseModule) {
+				throw new NotFoundException(`Course module with ID ${updateQuestionDto.courseModuleId} not found`);
 			}
-			question.contentModule = contentModule;
+			question.courseModule = courseModule;
 		}
 
 		Object.assign(question, updateQuestionDto);

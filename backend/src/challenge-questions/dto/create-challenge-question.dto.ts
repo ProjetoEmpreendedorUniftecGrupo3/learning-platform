@@ -18,7 +18,7 @@ export class CreateChallengeQuestionDto {
 
 	@IsUUID()
 	@IsOptional()
-	contentModuleId?: string;
+	courseModuleId?: string;
 
 	@IsUUID()
 	@IsNotEmpty()

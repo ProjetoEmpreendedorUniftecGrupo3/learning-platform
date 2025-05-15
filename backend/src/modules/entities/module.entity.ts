@@ -25,7 +25,7 @@ export class CourseModule {
 		cascade: true,
 	})
 	moduleCompletions: ModuleCompletion[];
-	@OneToMany(() => ChallengeQuestion, (question) => question.contentModule, {
+	@OneToMany(() => ChallengeQuestion, (question) => question.courseModule, {
 		cascade: true,
 	})
 	questions: ChallengeQuestion[];

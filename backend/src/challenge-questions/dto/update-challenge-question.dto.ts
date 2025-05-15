@@ -18,7 +18,7 @@ export class UpdateChallengeQuestionDto {
 
 	@IsUUID()
 	@IsOptional()
-	contentModuleId?: string;
+	courseModuleId?: string;
 
 	@IsUUID()
 	@IsOptional()
