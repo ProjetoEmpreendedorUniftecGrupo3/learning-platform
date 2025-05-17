@@ -142,14 +142,14 @@ export class ModulesService {
 		await this.modulesRepository.remove(courseModule);
 	}
 
-	async updateCompletion(courseModuleId: string, updateDto: UpdateModuleCompletionDto, user: User) {
+	async updateCompletion(moduleId: string, updateDto: UpdateModuleCompletionDto, user: User) {
 		const courseModule = await this.modulesRepository
 			.createQueryBuilder("module")
 			.leftJoinAndSelect("module.moduleCompletions", "completion", "completion.userId = :userId", {
 				userId: user.id,
 			})
 			.leftJoinAndSelect("completion.user", "user")
-			.where("module.id = :courseModuleId", { courseModuleId })
+			.where("module.id = :moduleId", { moduleId })
 			.getOne();
 
 		if (!courseModule) {
@@ -171,6 +171,6 @@ export class ModulesService {
 			}
 		}
 
-		return await this.findToUserTrail(courseModuleId, user);
+		return await this.findToUserTrail(moduleId, user);
 	}
 }

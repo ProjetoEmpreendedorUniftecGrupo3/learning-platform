@@ -28,13 +28,13 @@ export class ChallengeQuestionsService {
 		}
 
 		let courseModule: CourseModule | undefined = undefined;
-		if (createQuestionDto.courseModuleId) {
+		if (createQuestionDto.moduleId) {
 			courseModule = await this.moduleRepository.findOne({
-				where: { id: createQuestionDto.courseModuleId },
+				where: { id: createQuestionDto.moduleId },
 				relations: ["category"],
 			});
 			if (!courseModule) {
-				throw new NotFoundException(`Course module with ID ${createQuestionDto.courseModuleId} not found`);
+				throw new NotFoundException(`Course module with ID ${createQuestionDto.moduleId} not found`);
 			}
 
 			if (courseModule.category.id !== challenge.category.id) {
@@ -82,12 +82,12 @@ export class ChallengeQuestionsService {
 			question.challenge = challenge;
 		}
 
-		if (updateQuestionDto.courseModuleId) {
+		if (updateQuestionDto.moduleId) {
 			const courseModule = await this.moduleRepository.findOne({
-				where: { id: updateQuestionDto.courseModuleId },
+				where: { id: updateQuestionDto.moduleId },
 			});
 			if (!courseModule) {
-				throw new NotFoundException(`Course module with ID ${updateQuestionDto.courseModuleId} not found`);
+				throw new NotFoundException(`Course module with ID ${updateQuestionDto.moduleId} not found`);
 			}
 			question.courseModule = courseModule;
 		}
