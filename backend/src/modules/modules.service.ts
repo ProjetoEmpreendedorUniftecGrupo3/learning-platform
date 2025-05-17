@@ -129,7 +129,7 @@ export class ModulesService {
 		return this.modulesRepository.find({
 			where,
 			relations: {
-				category: true,
+				contents: true,
 			},
 			order: {
 				title: "ASC",

@@ -96,7 +96,7 @@ export const AdminCategoriesPage = () => {
 			);
 			setCategories(data);
 		} catch (e) {
-			console.log("GET ALL TRAILS ERROR: ", e);
+			console.log("GET ALL CATEGORIES ERROR: ", e);
 		} finally {
 			setLoading(false);
 		}
@@ -140,7 +140,7 @@ export const AdminCategoriesPage = () => {
 			await HttpClient.delete(`/categories/${deleteId}`);
 			setCategories((prev) => prev.filter((category) => category.id !== deleteId));
 		} catch (e) {
-			console.log("DELETE TRAILS ERROR: ", e);
+			console.log("DELETE CATEGORY ERROR: ", e);
 		} finally {
 			setIsDeleting(false);
 			closeDeleteDialog();

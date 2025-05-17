@@ -14,7 +14,7 @@ export type Module = {
 	completed: boolean;
 };
 
-type ModuleContent = {
+export type ModuleContent = {
 	id: string;
 	type: ModuleContentType;
 	description: string;

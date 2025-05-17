@@ -1,9 +1,11 @@
-import { IsString, IsUUID } from "class-validator";
+import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 
 export class CreateCategoryDto {
 	@IsString()
+	@IsNotEmpty()
 	name: string;
 
 	@IsUUID()
+	@IsNotEmpty()
 	trailId: string;
 }

@@ -21,6 +21,9 @@ import { TrailProvider } from "contexts/TrailContext";
 import { TrailForm } from "pages/admin/TrailForm";
 import { AdminCategoriesPage } from "pages/admin/Categories";
 import { CategoryForm } from "pages/admin/CategoryForm";
+import { AdminModulesPage } from "pages/admin/Modules";
+import { ModuleForm } from "pages/admin/ModuleForm";
+import { CategoryProvider } from "contexts/CategoryContext";
 
 export default function App() {
 	useEffect(() => {
@@ -38,43 +41,48 @@ export default function App() {
 			<Toaster />
 			<AuthProvider>
 				<TrailProvider>
-					<BrowserRouter>
-						<Routes>
-							{/* Rotas Públicas */}
-							<Route element={<PublicOnlyRoute />}>
-								<Route element={<PublicLayout />}>
-									<Route path="/login" element={<LoginPage />} />
-									<Route path="/register" element={<RegisterPage />} />
-									<Route path="/recover-password" element={<RecoverPasswordPage />} />
-									<Route path="/reset-password" element={<ResetPasswordPage />} />
+					<CategoryProvider>
+						<BrowserRouter>
+							<Routes>
+								{/* Rotas Públicas */}
+								<Route element={<PublicOnlyRoute />}>
+									<Route element={<PublicLayout />}>
+										<Route path="/login" element={<LoginPage />} />
+										<Route path="/register" element={<RegisterPage />} />
+										<Route path="/recover-password" element={<RecoverPasswordPage />} />
+										<Route path="/reset-password" element={<ResetPasswordPage />} />
+									</Route>
 								</Route>
-							</Route>
 
-							{/* Rotas de Usuário */}
-							<Route element={<ProtectedRoute requiredRole="user" />}>
-								<Route element={<UserLayout />}>
-									<Route path="/user/trail" element={<TrailPage />} />
+								{/* Rotas de Usuário */}
+								<Route element={<ProtectedRoute requiredRole="user" />}>
+									<Route element={<UserLayout />}>
+										<Route path="/user/trail" element={<TrailPage />} />
+									</Route>
 								</Route>
-							</Route>
 
-							{/* Rotas de Admin */}
-							<Route element={<ProtectedRoute requiredRole="admin" />}>
-								<Route element={<AdminLayout />}>
-									<Route path="/admin/trails" element={<AdminTrailsPage />} />
-									<Route path="/admin/trails/create" element={<TrailForm />} />
-									<Route path="/admin/trails/edit/:id" element={<TrailForm />} />
-									<Route path="/admin/categories" element={<AdminCategoriesPage />} />
-									<Route path="/admin/categories/create" element={<CategoryForm />} />
-									<Route path="/admin/categories/edit/:id" element={<CategoryForm />} />
+								{/* Rotas de Admin */}
+								<Route element={<ProtectedRoute requiredRole="admin" />}>
+									<Route element={<AdminLayout />}>
+										<Route path="/admin/trails" element={<AdminTrailsPage />} />
+										<Route path="/admin/trails/create" element={<TrailForm />} />
+										<Route path="/admin/trails/edit/:id" element={<TrailForm />} />
+										<Route path="/admin/categories" element={<AdminCategoriesPage />} />
+										<Route path="/admin/categories/create" element={<CategoryForm />} />
+										<Route path="/admin/categories/edit/:id" element={<CategoryForm />} />
+										<Route path="/admin/modules" element={<AdminModulesPage />} />
+										<Route path="/admin/modules/create" element={<ModuleForm />} />
+										<Route path="/admin/modules/edit/:id" element={<ModuleForm />} />
+									</Route>
 								</Route>
-							</Route>
 
-							{/* Redirecionamentos */}
-							<Route path="/admin" element={<Navigate to="/admin/trails" replace />} />
-							<Route path="/user" element={<Navigate to="/user/trail" replace />} />
-							<Route path="*" element={<Navigate to="/login" />} />
-						</Routes>
-					</BrowserRouter>
+								{/* Redirecionamentos */}
+								<Route path="/admin" element={<Navigate to="/admin/trails" replace />} />
+								<Route path="/user" element={<Navigate to="/user/trail" replace />} />
+								<Route path="*" element={<Navigate to="/login" />} />
+							</Routes>
+						</BrowserRouter>
+					</CategoryProvider>
 				</TrailProvider>
 			</AuthProvider>
 		</ChakraProvider>

@@ -66,11 +66,6 @@ export const TrailForm = () => {
 			navigate("/admin/trails");
 		} catch (e) {
 			console.error("SAVE TRAIL ERROR:", e);
-			toaster.create({
-				title: "Erro",
-				description: `Erro ao ${id ? "atualizar" : "criar"} trilha`,
-				type: "error",
-			});
 		} finally {
 			setSubmitting(false);
 		}

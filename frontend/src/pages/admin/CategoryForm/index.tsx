@@ -112,11 +112,6 @@ export const CategoryForm = () => {
 			navigate("/admin/categories");
 		} catch (e) {
 			console.error("SAVE Category ERROR:", e);
-			toaster.create({
-				title: "Erro",
-				description: `Erro ao ${id ? "atualizar" : "criar"} categoria`,
-				type: "error",
-			});
 		} finally {
 			setSubmitting(false);
 		}
