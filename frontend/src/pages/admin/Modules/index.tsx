@@ -196,7 +196,7 @@ export const AdminModulesPage = () => {
 								<Table.Row key={courseModule.id}>
 									<Table.Cell>{courseModule.title}</Table.Cell>
 									<Table.Cell
-										maxW="6xl"
+										maxW="xl"
 										overflow="hidden"
 										textOverflow="ellipsis"
 										whiteSpace="nowrap"
@@ -206,6 +206,13 @@ export const AdminModulesPage = () => {
 									<Table.Cell textAlign="center">{courseModule.contents.length}</Table.Cell>
 									<Table.Cell>
 										<Flex gap={2} justifyContent="flex-end">
+											<Button
+												size="sm"
+												colorPalette="teal"
+												onClick={() => navigate(`/admin/modules/${courseModule.id}/contents`)}
+											>
+												Conteúdos
+											</Button>
 											<Button
 												size="sm"
 												colorPalette="blue"

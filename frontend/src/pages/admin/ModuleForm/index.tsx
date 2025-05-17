@@ -122,9 +122,9 @@ export const ModuleForm = () => {
 					description: "Módulo criado com sucesso",
 					type: "success",
 				});
-				navigate("/admin/modules");
 			}
 			setSelectedCategoryId(formData.categoryId!);
+			navigate("/admin/modules");
 		} catch (e) {
 			console.error("SAVE MODULE ERROR:", e);
 		} finally {

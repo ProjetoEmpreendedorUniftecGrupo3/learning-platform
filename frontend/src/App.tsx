@@ -24,6 +24,7 @@ import { CategoryForm } from "pages/admin/CategoryForm";
 import { AdminModulesPage } from "pages/admin/Modules";
 import { ModuleForm } from "pages/admin/ModuleForm";
 import { CategoryProvider } from "contexts/CategoryContext";
+import { ModuleContentsPage } from "pages/admin/ModuleContents";
 
 export default function App() {
 	useEffect(() => {
@@ -73,6 +74,10 @@ export default function App() {
 										<Route path="/admin/modules" element={<AdminModulesPage />} />
 										<Route path="/admin/modules/create" element={<ModuleForm />} />
 										<Route path="/admin/modules/edit/:id" element={<ModuleForm />} />
+										<Route
+											path="/admin/modules/:moduleId/contents"
+											element={<ModuleContentsPage />}
+										/>
 									</Route>
 								</Route>
 
