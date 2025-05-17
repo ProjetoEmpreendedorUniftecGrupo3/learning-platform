@@ -9,6 +9,7 @@ import {
 	createListCollection,
 	Flex,
 	Textarea,
+	Dialog,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -48,6 +49,7 @@ export const ModuleForm = () => {
 	const [errors, setErrors] = useState<Partial<ModuleFormData>>({});
 	const [categories, setCategories] = useState<CategoryListItem[]>([]);
 	const [loadingCategories, setLoadingCategories] = useState(true);
+	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
 	useEffect(() => {
 		if (id) fetchModule();
@@ -106,6 +108,16 @@ export const ModuleForm = () => {
 		e.preventDefault();
 		if (!validateForm()) return;
 
+		// Se estiver editando um módulo e a categoria foi alterada, mostrar diálogo de confirmação
+		if (id && selectedCategoryId && formData.categoryId !== selectedCategoryId) {
+			setOpenConfirmDialog(true);
+			return;
+		}
+
+		await saveModule();
+	};
+
+	const saveModule = async () => {
 		setSubmitting(true);
 		try {
 			if (id) {
@@ -225,6 +237,55 @@ export const ModuleForm = () => {
 					</Flex>
 				</VStack>
 			</form>
+
+			<Dialog.Root
+				size="lg"
+				open={openConfirmDialog}
+				onOpenChange={({ open: isOpen }) => {
+					if (!isOpen) {
+						setOpenConfirmDialog(false);
+					}
+				}}
+			>
+				<Dialog.Backdrop />
+				<Dialog.CloseTrigger />
+
+				<Dialog.Positioner>
+					<Dialog.Content>
+						<Dialog.Header>
+							<Dialog.Title>Tem certeza que deseja alterar a categoria do módulo?</Dialog.Title>
+						</Dialog.Header>
+						<Dialog.Body>
+							<Text>
+								Alterar a categoria do módulo ira remover as relações com questões de desafios.{" "}
+							</Text>
+							<Text>Você tem certeza que deseja mudar a categoria deste módulo?</Text>
+						</Dialog.Body>
+						<Dialog.Footer>
+							<Button
+								variant="subtle"
+								onClick={() => {
+									// Reverter para a categoria original
+									setFormData((prev) => ({ ...prev, categoryId: selectedCategoryId }));
+									setOpenConfirmDialog(false);
+								}}
+							>
+								Cancelar
+							</Button>
+							<Button
+								colorPalette="red"
+								loading={submitting}
+								onClick={() => {
+									setOpenConfirmDialog(false);
+									saveModule();
+								}}
+							>
+								Confirmar
+							</Button>
+						</Dialog.Footer>
+					</Dialog.Content>
+				</Dialog.Positioner>
+			</Dialog.Root>
 		</VStack>
 	);
 };

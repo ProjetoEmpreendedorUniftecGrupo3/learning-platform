@@ -7,7 +7,6 @@ import {
 	Table,
 	Dialog,
 	Flex,
-	EmptyState,
 	Badge,
 	Field,
 	Input,
@@ -264,220 +263,207 @@ export const ModuleContentsPage = () => {
 				</VStack>
 			</HStack>
 
-			{!contents.length ? (
-				<EmptyState.Root>
-					<EmptyState.Content>
-						<VStack textAlign="center">
-							<EmptyState.Title>Não há conteúdos neste módulo</EmptyState.Title>
-							<EmptyState.Description>
-								Clique no botão "Adicionar novo conteúdo" para começar
-							</EmptyState.Description>
-						</VStack>
-					</EmptyState.Content>
-				</EmptyState.Root>
-			) : (
-				<Table.ScrollArea>
-					<Table.Root variant="outline">
-						<Table.Header>
-							<Table.Row>
-								<Table.ColumnHeader width="160px">Tipo</Table.ColumnHeader>
-								<Table.ColumnHeader>Descrição</Table.ColumnHeader>
-								<Table.ColumnHeader>URL</Table.ColumnHeader>
-								<Table.ColumnHeader width="120px" textAlign="end">
-									Ações
-								</Table.ColumnHeader>
-							</Table.Row>
-						</Table.Header>
-						<Table.Body>
-							{contents.map((content) => (
-								<Table.Row key={content.id} height="65px">
-									{editingFormData.id === content.id ? (
-										<>
-											<Table.Cell>
-												<Select.Root
-													collection={selectOptions}
-													value={editingFormData.type ? [editingFormData.type] : undefined}
-													onValueChange={(e) => {
+			<Table.ScrollArea>
+				<Table.Root variant="outline">
+					<Table.Header>
+						<Table.Row>
+							<Table.ColumnHeader width="160px">Tipo</Table.ColumnHeader>
+							<Table.ColumnHeader>Descrição</Table.ColumnHeader>
+							<Table.ColumnHeader>URL</Table.ColumnHeader>
+							<Table.ColumnHeader width="120px" textAlign="end">
+								Ações
+							</Table.ColumnHeader>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{contents.map((content) => (
+							<Table.Row key={content.id} height="65px">
+								{editingFormData.id === content.id ? (
+									<>
+										<Table.Cell>
+											<Select.Root
+												collection={selectOptions}
+												value={editingFormData.type ? [editingFormData.type] : undefined}
+												onValueChange={(e) => {
+													setEditingFormData((prev) => ({
+														...prev,
+														type: e.value[0] as
+															| "document"
+															| "video"
+															| "blog"
+															| "image"
+															| "website"
+															| undefined,
+													}));
+												}}
+											>
+												<Select.HiddenSelect />
+												<Select.Control>
+													<Select.Trigger>
+														<Select.ValueText placeholder="Selecione uma categoria" />
+													</Select.Trigger>
+
+													<Select.IndicatorGroup>
+														<Select.Indicator />
+													</Select.IndicatorGroup>
+												</Select.Control>
+												<Select.Positioner>
+													<Select.Content>
+														{selectOptions.items.map((category) => (
+															<Select.Item item={category} key={category.value}>
+																{category.label}
+																<Select.ItemIndicator />
+															</Select.Item>
+														))}
+													</Select.Content>
+												</Select.Positioner>
+											</Select.Root>
+										</Table.Cell>
+										<Table.Cell>
+											<Field.Root>
+												<Input
+													value={editingFormData.description}
+													onChange={(e) =>
 														setEditingFormData((prev) => ({
 															...prev,
-															type: e.value[0] as
-																| "document"
-																| "video"
-																| "blog"
-																| "image"
-																| "website"
-																| undefined,
-														}));
-													}}
-												>
-													<Select.HiddenSelect />
-													<Select.Control>
-														<Select.Trigger>
-															<Select.ValueText placeholder="Selecione uma categoria" />
-														</Select.Trigger>
-
-														<Select.IndicatorGroup>
-															<Select.Indicator />
-														</Select.IndicatorGroup>
-													</Select.Control>
-													<Select.Positioner>
-														<Select.Content>
-															{selectOptions.items.map((category) => (
-																<Select.Item item={category} key={category.value}>
-																	{category.label}
-																	<Select.ItemIndicator />
-																</Select.Item>
-															))}
-														</Select.Content>
-													</Select.Positioner>
-												</Select.Root>
-											</Table.Cell>
-											<Table.Cell>
-												<Field.Root>
-													<Input
-														value={editingFormData.description}
-														onChange={(e) =>
-															setEditingFormData((prev) => ({
-																...prev,
-																description: e.target.value,
-															}))
-														}
-														placeholder="Descrição"
-													/>
-												</Field.Root>
-											</Table.Cell>
-											<Table.Cell>
-												<Input
-													value={editingFormData.url}
-													onChange={(e) =>
-														setEditingFormData((prev) => ({ ...prev, url: e.target.value }))
+															description: e.target.value,
+														}))
 													}
-													placeholder="URL"
+													placeholder="Descrição"
 												/>
-											</Table.Cell>
-											<Table.Cell>
+											</Field.Root>
+										</Table.Cell>
+										<Table.Cell>
+											<Input
+												value={editingFormData.url}
+												onChange={(e) =>
+													setEditingFormData((prev) => ({ ...prev, url: e.target.value }))
+												}
+												placeholder="URL"
+											/>
+										</Table.Cell>
+										<Table.Cell>
+											<Button
+												colorPalette="green"
+												onClick={handleUpdate}
+												disabled={
+													!editingFormData.description ||
+													!editingFormData.url ||
+													!editingFormData.type
+												}
+											>
+												Salvar
+											</Button>
+										</Table.Cell>
+									</>
+								) : (
+									<>
+										<Table.Cell>{getContentTypeBadge(content.type)}</Table.Cell>
+										<Table.Cell>{content.description}</Table.Cell>
+										<Table.Cell>
+											<Text
+												maxW="6xl"
+												overflow="hidden"
+												textOverflow="ellipsis"
+												whiteSpace="nowrap"
+											>
+												{content.url}
+											</Text>
+										</Table.Cell>
+										<Table.Cell>
+											<Flex gap={2} justifyContent="flex-end">
 												<Button
-													colorPalette="green"
-													onClick={handleUpdate}
-													disabled={
-														!editingFormData.description ||
-														!editingFormData.url ||
-														!editingFormData.type
-													}
+													size="sm"
+													colorPalette="blue"
+													onClick={() => setEditingFormData(content)}
 												>
-													Salvar
+													Editar
 												</Button>
-											</Table.Cell>
-										</>
-									) : (
-										<>
-											<Table.Cell>{getContentTypeBadge(content.type)}</Table.Cell>
-											<Table.Cell>{content.description}</Table.Cell>
-											<Table.Cell>
-												<Text
-													maxW="6xl"
-													overflow="hidden"
-													textOverflow="ellipsis"
-													whiteSpace="nowrap"
+												<Button
+													size="sm"
+													colorPalette="red"
+													onClick={() => openDeleteDialog(content.id)}
 												>
-													{content.url}
-												</Text>
-											</Table.Cell>
-											<Table.Cell>
-												<Flex gap={2} justifyContent="flex-end">
-													<Button
-														size="sm"
-														colorPalette="blue"
-														onClick={() => setEditingFormData(content)}
-													>
-														Editar
-													</Button>
-													<Button
-														size="sm"
-														colorPalette="red"
-														onClick={() => openDeleteDialog(content.id)}
-													>
-														Excluir
-													</Button>
-												</Flex>
-											</Table.Cell>
-										</>
-									)}
-								</Table.Row>
-							))}
-							<Table.Row>
-								<Table.Cell>
-									<Select.Root
-										collection={selectOptions}
-										value={formData.type ? [formData.type] : undefined}
-										onValueChange={(e) => {
-											setFormData((prev) => ({
-												...prev,
-												type: e.value[0] as
-													| "document"
-													| "video"
-													| "blog"
-													| "image"
-													| "website"
-													| undefined,
-											}));
-										}}
-									>
-										<Select.HiddenSelect />
-										<Select.Control>
-											<Select.Trigger>
-												<Select.ValueText placeholder="Selecione uma categoria" />
-											</Select.Trigger>
-
-											<Select.IndicatorGroup>
-												<Select.Indicator />
-											</Select.IndicatorGroup>
-										</Select.Control>
-										<Select.Positioner>
-											<Select.Content>
-												{selectOptions.items.map((category) => (
-													<Select.Item item={category} key={category.value}>
-														{category.label}
-														<Select.ItemIndicator />
-													</Select.Item>
-												))}
-											</Select.Content>
-										</Select.Positioner>
-									</Select.Root>
-								</Table.Cell>
-								<Table.Cell>
-									<Field.Root>
-										<Input
-											value={formData.description}
-											onChange={(e) =>
-												setFormData((prev) => ({ ...prev, description: e.target.value }))
-											}
-											placeholder="Descrição"
-										/>
-									</Field.Root>
-								</Table.Cell>
-								<Table.Cell>
-									<Input
-										value={formData.url}
-										onChange={(e) => setFormData((prev) => ({ ...prev, url: e.target.value }))}
-										placeholder="URL"
-									/>
-								</Table.Cell>
-								<Table.Cell>
-									<Button
-										colorPalette="green"
-										onClick={handleCreate}
-										disabled={!formData.description || !formData.url || !formData.type}
-										loading={creating}
-									>
-										Adicionar
-									</Button>
-								</Table.Cell>
+													Excluir
+												</Button>
+											</Flex>
+										</Table.Cell>
+									</>
+								)}
 							</Table.Row>
-						</Table.Body>
-					</Table.Root>
-				</Table.ScrollArea>
-			)}
+						))}
+						<Table.Row>
+							<Table.Cell>
+								<Select.Root
+									collection={selectOptions}
+									value={formData.type ? [formData.type] : undefined}
+									onValueChange={(e) => {
+										setFormData((prev) => ({
+											...prev,
+											type: e.value[0] as
+												| "document"
+												| "video"
+												| "blog"
+												| "image"
+												| "website"
+												| undefined,
+										}));
+									}}
+								>
+									<Select.HiddenSelect />
+									<Select.Control>
+										<Select.Trigger>
+											<Select.ValueText placeholder="Selecione uma categoria" />
+										</Select.Trigger>
+
+										<Select.IndicatorGroup>
+											<Select.Indicator />
+										</Select.IndicatorGroup>
+									</Select.Control>
+									<Select.Positioner>
+										<Select.Content>
+											{selectOptions.items.map((category) => (
+												<Select.Item item={category} key={category.value}>
+													{category.label}
+													<Select.ItemIndicator />
+												</Select.Item>
+											))}
+										</Select.Content>
+									</Select.Positioner>
+								</Select.Root>
+							</Table.Cell>
+							<Table.Cell>
+								<Field.Root>
+									<Input
+										value={formData.description}
+										onChange={(e) =>
+											setFormData((prev) => ({ ...prev, description: e.target.value }))
+										}
+										placeholder="Descrição"
+									/>
+								</Field.Root>
+							</Table.Cell>
+							<Table.Cell>
+								<Input
+									value={formData.url}
+									onChange={(e) => setFormData((prev) => ({ ...prev, url: e.target.value }))}
+									placeholder="URL"
+								/>
+							</Table.Cell>
+							<Table.Cell>
+								<Button
+									colorPalette="green"
+									onClick={handleCreate}
+									disabled={!formData.description || !formData.url || !formData.type}
+									loading={creating}
+								>
+									Adicionar
+								</Button>
+							</Table.Cell>
+						</Table.Row>
+					</Table.Body>
+				</Table.Root>
+			</Table.ScrollArea>
 
 			<Dialog.Root
 				open={openDelete}
