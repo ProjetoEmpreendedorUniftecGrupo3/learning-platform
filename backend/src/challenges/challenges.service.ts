@@ -8,6 +8,7 @@ import { CategoriesService } from "../categories/categories.service";
 import { ChallengeResponseResultDto } from "./dto/challenge-response-result.dto";
 import { ChallengeResponseDto } from "./dto/challenge-response.dto";
 import { CreateChallengeDto } from "./dto/create-challenge.dto";
+import { FindAllChallengesDto } from "./dto/find-all-challenges.dto";
 import { Challenge } from "./entities/challenge.entity";
 
 @Injectable()
@@ -22,14 +23,25 @@ export class ChallengesService {
 
 	async create(createChallengeDto: CreateChallengeDto): Promise<Challenge> {
 		const category = await this.categoriesService.findOne(createChallengeDto.categoryId);
+		if (category.challenge) {
+			throw new BadRequestException("Categoria já possui um desafio");
+		}
 		const challenge = this.challengesRepository.create({ category });
 		return this.challengesRepository.save(challenge);
+	}
+
+	async findAll(query?: FindAllChallengesDto): Promise<Challenge[]> {
+		const where = query?.trailId ? { category: { trail: { id: query.trailId } } } : {};
+		return this.challengesRepository.find({
+			where,
+			relations: ["category", "category.trail", "questions"],
+		});
 	}
 
 	async findOne(id: string): Promise<Challenge> {
 		const challenge = await this.challengesRepository.findOne({
 			where: { id },
-			relations: ["questions", "questions.alternatives", "questions.courseModule"],
+			relations: ["questions", "questions.alternatives", "questions.courseModule", "category"],
 		});
 
 		if (!challenge) {
@@ -129,5 +141,10 @@ export class ChallengesService {
 				studySuggestions,
 			};
 		}
+	}
+
+	async remove(id: string): Promise<void> {
+		const challenge = await this.findOne(id);
+		await this.challengesRepository.remove(challenge);
 	}
 }

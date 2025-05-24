@@ -23,7 +23,7 @@ export class Category {
 	})
 	modules: CourseModule[];
 
-	@OneToOne(() => Challenge, (challenge) => challenge.category)
+	@OneToOne(() => Challenge, (challenge) => challenge.category, { nullable: true, onDelete: "SET NULL" })
 	@JoinColumn()
 	challenge: Challenge;
 }
