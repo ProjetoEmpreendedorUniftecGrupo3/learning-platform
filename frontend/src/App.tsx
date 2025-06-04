@@ -27,6 +27,7 @@ import { CategoryProvider } from "contexts/CategoryContext";
 import { ModuleContentsPage } from "pages/admin/ModuleContents";
 import { AdminChallengesPage } from "pages/admin/Challenges";
 import { ChallengeForm } from "pages/admin/ChallengeForm";
+import { ChallengeQuestionsPage } from "pages/admin/ChallengeQuestions";
 
 export default function App() {
 	useEffect(() => {
@@ -78,6 +79,10 @@ export default function App() {
 										<Route path="/admin/modules/edit/:id" element={<ModuleForm />} />
 										<Route path="/admin/challenges" element={<AdminChallengesPage />} />
 										<Route path="/admin/challenges/create" element={<ChallengeForm />} />
+										<Route
+											path="/admin/challenges/:challengeId/questions"
+											element={<ChallengeQuestionsPage />}
+										/>
 										<Route
 											path="/admin/modules/:moduleId/contents"
 											element={<ModuleContentsPage />}

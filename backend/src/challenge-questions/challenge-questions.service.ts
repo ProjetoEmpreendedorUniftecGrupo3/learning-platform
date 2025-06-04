@@ -59,7 +59,7 @@ export class ChallengeQuestionsService {
 	async findOne(id: string) {
 		const question = await this.questionRepository.findOne({
 			where: { id },
-			relations: ["alternatives", "courseModule"],
+			relations: ["alternatives", "courseModule", "challenge"],
 		});
 
 		if (!question) {

@@ -203,7 +203,11 @@ export const AdminChallengesPage = () => {
 									)}
 									<Table.Cell>
 										<Flex gap={2} justifyContent="flex-end">
-											<Button size="sm" colorPalette="blue">
+											<Button
+												size="sm"
+												colorPalette="blue"
+												onClick={() => navigate(`/admin/challenges/${challenge.id}/questions`)}
+											>
 												Questões
 											</Button>
 											<Button
