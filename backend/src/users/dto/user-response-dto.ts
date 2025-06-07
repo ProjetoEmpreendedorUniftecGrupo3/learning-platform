@@ -15,6 +15,9 @@ export class UserResponseDto {
 	birthDate: Date;
 
 	@Expose()
+	createdAt: Date;
+
+	@Expose()
 	role: UserRole;
 
 	constructor(partial: Partial<User>) {
