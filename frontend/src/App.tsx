@@ -28,6 +28,7 @@ import { ModuleContentsPage } from "pages/admin/ModuleContents";
 import { AdminChallengesPage } from "pages/admin/Challenges";
 import { ChallengeForm } from "pages/admin/ChallengeForm";
 import { ChallengeQuestionsPage } from "pages/admin/ChallengeQuestions";
+import { AdminUsersPage } from "pages/admin/Users";
 
 export default function App() {
 	useEffect(() => {
@@ -87,6 +88,7 @@ export default function App() {
 											path="/admin/modules/:moduleId/contents"
 											element={<ModuleContentsPage />}
 										/>
+										<Route path="/admin/users" element={<AdminUsersPage />} />
 									</Route>
 								</Route>
 
